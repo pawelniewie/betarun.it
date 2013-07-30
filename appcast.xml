@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle"><channel>
+	<title>Queued</title>
+	<link>http://pawelniewiadomski.com/queued</link>
+	<description>Buffer helper for your Mac OS X</description>
+	<language>en</language>
+	<item>
+		<title>Version 0.6.2</title>
+		<description><![CDATA[
+			<h2>Post to Buffer!</h2>
+			<p>This version allows you to post updates directly from Queued.</p>
+			<p>I know it looks ugly and it's not yet polished. Facebook integration lacks a bit. I will improve it a lot in following versions. That's my first Mac App ever so bare with me ;-)</p>
+			<h2>Fixed bugs</h2>
+			<ul>
+				<li>Queued icon will correctly disappear after sending an update</li>
+			</ul>
+			]]></description>
+		<sparkle:minimumSystemVersion>10.8.0</sparkle:minimumSystemVersion>
+		<pubDate>Mon, 22 Jul 2013 22:53:15 CEST</pubDate>
+		<enclosure url="http://queuedupdates.appspot.com/binaries/Queued-0.6.2.zip" sparkle:version="64" sparkle:shortVersionString="0.6.2" length="3014020" type="application/octet-stream"/>
+	</item>
+	<item>
+		<title>Version 0.6.1</title>
+		<description><![CDATA[
+			<h2>Post to Buffer!</h2>
+			<p>This version allows you to post updates directly from Queued.</p>
+			<p>I know it looks ugly and it's not yet polished. Facebook integration lacks a bit. I will improve it a lot in following versions. That's my first Mac App ever so bare with me ;-)</p>
+			]]></description>
+		<sparkle:minimumSystemVersion>10.8.0</sparkle:minimumSystemVersion>
+		<pubDate>Sat, 20 Jul 2013 22:53:15 CEST</pubDate>
+		<enclosure url="http://queuedupdates.appspot.com/binaries/Queued-0.6.1.zip" sparkle:version="60" sparkle:shortVersionString="0.6.1" length="3014014" type="application/octet-stream"/>
+	</item>
+	<item>
+		<title>Version 0.6</title>
+		<description><![CDATA[
+			<h2>New features</h2>
+			<div>This version allows you to post updates directly from Queued!</div>
+			<div>I know it looks ugly and it's not yet polished. Facebook integration lacks a bit. I will improve it a lot in following versions. That's my first Mac App ever so bare with me ;-)</div>
+			]]></description>
+		<sparkle:minimumSystemVersion>10.8.0</sparkle:minimumSystemVersion>
+		<pubDate>Sat, 20 Jul 2013 22:43:15 CEST</pubDate>
+		<enclosure url="http://queuedupdates.appspot.com/binaries/Queued-0.6.zip" sparkle:version="59" sparkle:shortVersionString="0.6" length="3013942" type="application/octet-stream"/>
+	</item>
+	<item>
+		<title>Version 0.5</title>
+		<description><![CDATA[
+			<h2>Feedback needed</h2>
+			<p>
+				Do you feel this app should have additonal features? Do you miss anything when working with Buffer? <a href="mailto:ver4@pawelniewiadomski.com">Let me know!</a>.
+			</p>
+			<h2>Bugs</h2>
+			<ul>
+				<li>Fixed layout glitch on OS X Maverick</li>
+			</ul>
+			]]></description>
+		<sparkle:minimumSystemVersion>10.8.0</sparkle:minimumSystemVersion>
+		<pubDate>Fri, 21 Jun 2013 22:43:15 CEST</pubDate>
+		<enclosure url="http://queuedupdates.appspot.com/binaries/Queued-0.5.zip" sparkle:version="50" sparkle:shortVersionString="0.5" length="3004619" type="application/octet-stream"/>
+	</item>
+	<item>
+		<title>Version 0.4</title>
+		<description><![CDATA[
+			<h2>New features</h2>
+			<ul>
+				<li>You can check for updates from the main panel</li>
+				<li>Send feedback is easier to discover</li>
+				<li>Queued can be launched automatically when you log in</li>
+			</ul>
+			]]></description>
+		<sparkle:minimumSystemVersion>10.8.0</sparkle:minimumSystemVersion>
+		<pubDate>Sun, 26 May 2013 22:43:15 CEST</pubDate>
+		<enclosure url="http://queuedupdates.appspot.com/binaries/Queued-0.4.zip" sparkle:version="47" sparkle:shortVersionString="0.4" length="3350680" type="application/octet-stream"/>
+	</item>
+	<item>
+		<title>Version 0.3</title>
+		<description><![CDATA[
+			<h2>New features</h2>
+			<ul>
+				<li>You can see which day the update is scheduled on</li>
+				<li>You can delete a single update</li>
+				<li>You can publish instantly a single update</li>
+			</ul>
+			<h2>Fixed bugs</h2>
+			<ul>
+				<li>Improved profiles synchronization</li>
+				<li>Selection is remembered between reloads</li>
+			</ul>
+			]]></description>
+		<sparkle:minimumSystemVersion>10.8.0</sparkle:minimumSystemVersion>
+		<pubDate>Sun, 19 May 2013 20:57:19 CEST</pubDate>
+		<enclosure url="http://queuedupdates.appspot.com/binaries/Queued-0.3.zip" sparkle:version="44" sparkle:shortVersionString="0.3" length="3314825" type="application/octet-stream"/>
+	</item>
+	<item>
+		<title>Version 0.2</title>
+		<description><![CDATA[
+			<h2>New features</h2>
+			<ul>
+				<li>You can refresh manually to see the latest changes</li>
+				<li>You can delete pending updates</li>
+				<li>Icon is by default black which is not upsetting</li>
+			</ul>
+			]]></description>
+		<sparkle:minimumSystemVersion>10.8.0</sparkle:minimumSystemVersion>
+		<pubDate>Wed, 15 May 2013 22:42:23 CEST</pubDate>
+		<enclosure url="http://queuedupdates.appspot.com/binaries/Queued-0.2.zip" sparkle:version="37" sparkle:shortVersionString="0.2" length="3309022" type="application/octet-stream"/>
+	</item>
+	<item>
+		<title>Version 0.1</title>
+		<description>Initial release.</description>
+		<sparkle:minimumSystemVersion>10.8.0</sparkle:minimumSystemVersion>
+		<pubDate>Fri, 03 May 2013 19:44:56 +0000</pubDate>
+		<enclosure url="http://queuedupdates.appspot.com/binaries/Queued-0.1.zip" sparkle:version="22" sparkle:shortVersionString="0.1" length="196752" type="application/octet-stream"/>
+	</item>
+</channel>
+</rss>
