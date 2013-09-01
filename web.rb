@@ -18,8 +18,28 @@ class AppCast
     include Mongoid::Document
 
     field :name, type: String
+    field :url, type: String
+    field :description, type: String
+    field :language, type: String, default: 'en'
 
     index({ name: 1 }, { unique: true })
+
+    has_many :items
+end
+
+class Item
+		include Mongoid::Document
+
+		belongs_to :appcast
+
+		field :title, type: String
+		field :description, type: String
+		field :minimumSystemVersion, type: String
+		field :pubDate, type: Time, default: -> { Time.now }
+		field :url, type: String
+		field :versionNumber, type: Integer
+		field :versionString, type: String
+		field :size, type: Integer
 end
 
 helpers do
@@ -34,24 +54,39 @@ get '/queued/?' do
 	haml :queued
 end
 
-get '/appcasts.json' do
+get '/appcasts' do
 	content_type :json
 	appcasts = AppCast.all
 	appcasts.to_json
 end
 
-post '/appcasts.json' do
+post '/appcasts' do
 	content_type :json
-	AppCast.create!(name: params[:name]).to_json
+	AppCast.create!(params).to_json
 end
 
-put '/appcasts.json/:id' do |id|
+put '/appcasts/:id' do |id|
 	content_type :json
 	data = JSON.parse(request.body.read)
 	AppCast.find(id).update(data).to_json
 end
 
-get '/appcasts.json/:id' do |id|
+get '/appcasts/:id' do |id|
 	content_type :json
 	AppCast.find(id).to_json
+end
+
+post '/appcasts/:id/items' do |id|
+	content_type :json
+	AppCast.find(id).items.push(Item.create!(params))
+end
+
+get '/appcasts/:id/items' do |id|
+	content_type :json
+	AppCast.find(id).items.to_json
+end
+
+get '/appcasts/:id/feed' do |id|
+	content_type :xml
+	erb :appcast, :locals => { :appcast => AppCast.find(id) }
 end
