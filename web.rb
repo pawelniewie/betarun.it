@@ -17,20 +17,20 @@ end
 class AppCast
     include Mongoid::Document
 
+    embeds_many :items
+
     field :name, type: String
     field :url, type: String
     field :description, type: String
     field :language, type: String, default: 'en'
 
     index({ name: 1 }, { unique: true })
-
-    has_many :items
 end
 
 class Item
 		include Mongoid::Document
 
-		belongs_to :appcast
+		embedded_in :appcast
 
 		field :title, type: String
 		field :description, type: String
@@ -78,7 +78,7 @@ end
 
 post '/appcasts/:id/items' do |id|
 	content_type :json
-	AppCast.find(id).items.push(Item.create!(params))
+	AppCast.find(id).items.push(Item.new(params)).to_json
 end
 
 get '/appcasts/:id/items' do |id|
