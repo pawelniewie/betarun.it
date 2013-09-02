@@ -4,7 +4,19 @@ Bundler.require
 
 Mongoid.load!("mongoid.yml")
 
+# See https://developers.facebook.com/docs/reference/api/permissions/
+# for a full list of permissions
+FACEBOOK_SCOPE = 'email,publish_actions,publish_stream'
+
+unless ENV["FACEBOOK_APP_ID"] && ENV["FACEBOOK_SECRET"]
+  abort("missing env vars: please set FACEBOOK_APP_ID and FACEBOOK_SECRET with your app credentials")
+end
+
 configure do
+	enable :sessions
+
+	set :appname, "AppCasts"
+
   set :public_dir, File.dirname(__FILE__) + '/public'
   set :static, true
 
@@ -12,6 +24,51 @@ configure do
   set :scss, { :style => :compact, :debug_info => false }
 
   Compass.add_project_configuration(File.join(Sinatra::Application.root, 'config', 'compass.rb'))
+end
+
+configure :production do
+	set :raise_errors, false
+	set :show_exceptions, false
+end
+
+before do
+  # HTTPS redirect
+  if settings.environment == :production && request.scheme != 'https'
+    redirect "https://#{request.env['HTTP_HOST']}"
+  end
+end
+
+helpers do
+  def host
+    request.env['HTTP_HOST']
+  end
+
+  def scheme
+    request.scheme
+  end
+
+  def url_no_scheme(path = '')
+    "//#{host}#{path}"
+  end
+
+  def url(path = '')
+    "#{scheme}://#{host}#{path}"
+  end
+
+  def authenticator
+    @authenticator ||= Koala::Facebook::OAuth.new(ENV["FACEBOOK_APP_ID"], ENV["FACEBOOK_SECRET"], url("/auth/facebook/callback"))
+  end
+
+  # allow for javascript authentication
+  def access_token_from_cookie
+    authenticator.get_user_info_from_cookies(request.cookies)['access_token']
+  rescue => err
+    warn err.message
+  end
+
+  def access_token
+    session[:access_token] || access_token_from_cookie
+  end
 end
 
 class AppCast
@@ -42,16 +99,34 @@ class Item
 		field :size, type: Integer
 end
 
-helpers do
+# the facebook session expired! reset ours and restart the process
+error(Koala::Facebook::APIError) do
+  session[:access_token] = nil
+  redirect "/auth/facebook"
+end
 
+get '/stylesheets/:name.css' do
+  content_type 'text/css', :charset => 'utf-8'
+  scss(:"stylesheets/#{params[:name]}" )
 end
 
 get '/' do
 	haml :index
 end
 
-get '/queued/?' do
-	haml :queued
+get '/dashboard' do
+	haml :dashboard
+end
+
+# Allows for direct oauth authentication
+get "/auth/facebook" do
+  session[:access_token] = nil
+  redirect authenticator.url_for_oauth_code(:permissions => FACEBOOK_SCOPE)
+end
+
+get '/auth/facebook/callback' do
+  session[:access_token] = authenticator.get_access_token(params[:code])
+  redirect '/dashboard'
 end
 
 get '/appcasts' do
@@ -87,6 +162,11 @@ get '/appcasts/:id/items' do |id|
 end
 
 get '/appcasts/:id/feed' do |id|
+	content_type :xml
+	erb :appcast, :locals => { :appcast => AppCast.find(id) }
+end
+
+get '/appcasts/:id/download/latest' do |id|
 	content_type :xml
 	erb :appcast, :locals => { :appcast => AppCast.find(id) }
 end

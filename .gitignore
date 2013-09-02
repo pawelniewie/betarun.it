@@ -1,3 +1,5 @@
 vendor
 .bundle
 *.sublime-*
+.env
+.sass-cache

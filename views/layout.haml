@@ -1,0 +1,52 @@
+!!!
+%html{:lang => "en", "xmlns:fb" => "http://ogp.me/ns/fb#", "ng-app" => "kfz"}
+  %head
+    %meta{:charset => "utf-8"}/
+    %meta{:content => "width=device-width, initial-scale=1.0, maximum-scale=2.0, user-scalable=yes", :name => "viewport"}/
+    %title=settings.appname
+    / These are Open Graph tags.  They add meta data to your
+    / site that facebook uses when your content is shared
+    / over facebook.  You should fill these tags in with
+    / your data.  To learn more about Open Graph, visit
+    / 'https://developers.facebook.com/docs/opengraph/'
+    %meta{:content => settings.appname, :property => "og:title"}/
+    %meta{:content => "website", :property => "og:type"}/
+    %meta{:content => url, :property => "og:url"}/
+    %meta{:content => url('/logo.png'), :property => "og:image"}/
+    %meta{:content => settings.appname, :property => "og:site_name"}/
+    %meta{:content => "Manage your Sparkle AppCasts", :property => "og:description"}/
+    %meta{:content => settings.appname, :property => "fb:app_id"}/
+
+    / Le styles
+    %link{:href => "//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css", :rel => "stylesheet"}/
+    %link{:href => "//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.min.css", :rel => "stylesheet"}/
+
+    / HTML5 shim, for IE6-8 support of HTML5 elements
+    /[if lt IE 9] <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    /[if lt IE 8] <link href="//netdna.bootstrapcdn.com/font-awesome/3.1.1/css/font-awesome-ie7.min.css" rel="stylesheet">
+
+    != yield_content(:head)
+
+  %body
+
+    != yield
+
+    %script{:src => "//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4/underscore-min.js"}
+    %script{:src => "//code.jquery.com/jquery-1.10.0.min.js"}
+    %script{:src => "//cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/3.0.4/jquery.imagesloaded.min.js"}
+    %script{:src => "//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"}
+    %script{:src => "//cdnjs.cloudflare.com/ajax/libs/masonry/3.1.1/masonry.pkgd.js"}
+    %script{:src => "//ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"}
+
+    :javascript
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-24346151-1']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    != yield_content(:scripts)

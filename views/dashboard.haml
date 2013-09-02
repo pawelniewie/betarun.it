@@ -1,0 +1,28 @@
+- content_for(:head) do
+	%link{:href => "/stylesheets/dashboard.css", :rel => "stylesheet"}
+
+- content_for(:scripts) do
+	%script{:src => "/javascripts/angular-masonry.js"}
+	%script{:src => "/javascripts/dashboard.js"}
+
+.container
+	.masthead
+		%h3.muted=settings.appname
+	%hr/
+	%div{ "ng-controller" => "DashboardCtrl" }
+		%div
+			%input{:id => "maleGender", :type => "radio", "ng-model" => "showGender", :value => "male"}
+			%label{:for => "maleGender"} Szukam faceta
+			%input{:id => "femaleGender", :type => "radio", "ng-model" => "showGender", :value => "female"}
+			%label{:for => "femaleGender"} Szukam kobiety
+
+		.text-center.loading{ "ng-show" => "loading"}
+			%i{:class=>"icon-spinner icon-spin icon-large"}
+			Ładowanie kontaktów...
+		.friends{"masonry" => "", "column-width" => "100"}
+			.friend.masonry-brick{ "ng-repeat" => "friend in friends | filterByGender:showGender | orderBy:friend.name"}
+				.hang-out
+					%a{"ng-click" => "updateInterest({{friend.id}}, false)"} HO
+				%img{"ng-src" => '{{friend.picture.data.url}}', :alt => "{{friend.name}}", :title => "{{friend.name}}"}
+				.bang
+					%a{"ng-click" => "updateInterest({{friend.id}}, true)"} BA

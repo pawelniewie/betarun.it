@@ -1,0 +1,33 @@
+- content_for(:head) do
+  %link{:href => "/stylesheets/main.css", :rel => "stylesheet"}
+
+.container-narrow
+  .header
+    %ul.nav.nav-pills.pull-right
+      %li.active
+        %a{:href => "#"} Home
+      %li
+        %a{:href => "#"} About
+      %li
+        %a{:href => "#"} Contact
+    %h3.text-muted=settings.appname
+  %hr/
+  .jumbotron
+    %h1 Self updating Mac app in 5 minutes!
+    %p.lead You want to focus on your app, we get it! That's why I prepared this super easy way to handle automatic updates for all your users!
+    %p
+      %a.btn.btn-lg.btn-success{:href => url('/auth/facebook')} Try it out with Facebook login
+  .row.marketing
+    .col-lg-6
+      %h4 Based on proven technology
+      %p This site is using Sparkle the most popular self-updating framework for Mac
+      %h4 Customized
+      %p You'll get a customized Sparkle that requires no effort to integrate it with your project
+    .col-lg-6
+      %h4 Fast
+      %p The whole setup shouldn't take your more than 5 minutes
+      %h4 Fresh
+      %p A special link will return the latest version for your app - right to use on your product page
+  %hr/
+  .footer
+    %p &copy; Pawel Niewiadomski 2013
