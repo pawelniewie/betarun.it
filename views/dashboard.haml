@@ -2,12 +2,11 @@
 	%link{:href => "/stylesheets/dashboard.css", :rel => "stylesheet"}
 
 - content_for(:scripts) do
-	%script{:src => "/javascripts/angular-masonry.js"}
 	%script{:src => "/javascripts/dashboard.js"}
 
 .container
-	.masthead
-		%h3.muted=settings.appname
+	.header
+		%h3.text-muted=settings.appname
 	%hr/
 	%div{ "ng-controller" => "DashboardCtrl" }
 		%div

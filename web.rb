@@ -74,9 +74,12 @@ end
 class User
 	include Mongoid::Document
 
-	has_many :appcasts
+	has_many :appcasts, class_name: "AppCast"
 
 	field :email, type: String
+	field :fullName, type: String
+	field :callingName, type: String
+	field :picture, type: String
 
 	index({ email: 1 }, { unique: true })
 end
@@ -142,6 +145,18 @@ get '/auth/facebook/callback' do
 end
 
 get '/auth/success' do
+	# Get base API Connection
+	@graph  = Koala::Facebook::API.new(access_token)
+
+	profile = @graph.get_object("me")
+
+	user = User.where(email: profile[:email]).first
+	if not user
+		picture = @graph.get_picture("me")
+		user = User.create!(email: profile[:email], fullName: profile[:name], callingName: profile[:first_name], picture: picture)
+	end
+	session[:user_id] = user._id
+	redirect '/dashboard'
 end
 
 ['/appcasts/*', '/appcasts'].each do |path|
