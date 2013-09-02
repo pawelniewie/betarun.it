@@ -71,9 +71,20 @@ helpers do
   end
 end
 
+class User
+	include Mongoid::Document
+
+	has_many :appcasts
+
+	field :email, type: String
+
+	index({ email: 1 }, { unique: true })
+end
+
 class AppCast
     include Mongoid::Document
 
+		belongs_to :user
     embeds_many :items
 
     field :name, type: String
@@ -115,6 +126,7 @@ get '/' do
 end
 
 get '/dashboard' do
+	return '/' if not access_token
 	haml :dashboard
 end
 
@@ -126,7 +138,16 @@ end
 
 get '/auth/facebook/callback' do
   session[:access_token] = authenticator.get_access_token(params[:code])
-  redirect '/dashboard'
+  redirect '/auth/success'
+end
+
+get '/auth/success' do
+end
+
+['/appcasts/*', '/appcasts'].each do |path|
+	before path do
+	  halt 401, "Not authorized\n" if not access_token
+	end
 end
 
 get '/appcasts' do
