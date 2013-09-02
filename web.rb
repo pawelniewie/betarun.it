@@ -155,6 +155,9 @@ get '/auth/success' do
 		picture = @graph.get_picture("me")
 		user = User.create!(email: profile[:email], fullName: profile[:name], callingName: profile[:first_name], picture: picture)
 	end
+	if not user.appcasts.exists?
+		user.appcasts.push(Appcast.new(name: "Awesome Appcast"))
+	end
 	session[:user_id] = user._id
 	redirect '/dashboard'
 end

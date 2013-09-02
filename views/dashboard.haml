@@ -4,24 +4,40 @@
 - content_for(:scripts) do
 	%script{:src => "/javascripts/dashboard.js"}
 
-.container
+.container{"ng-controller" => "DashboardCtrl"}
 	.header
 		%h3.text-muted=settings.appname
 	%hr/
-	%div{ "ng-controller" => "DashboardCtrl" }
-		%div
-			%input{:id => "maleGender", :type => "radio", "ng-model" => "showGender", :value => "male"}
-			%label{:for => "maleGender"} Szukam faceta
-			%input{:id => "femaleGender", :type => "radio", "ng-model" => "showGender", :value => "female"}
-			%label{:for => "femaleGender"} Szukam kobiety
-
-		.text-center.loading{ "ng-show" => "loading"}
-			%i{:class=>"icon-spinner icon-spin icon-large"}
-			Ładowanie kontaktów...
-		.friends{"masonry" => "", "column-width" => "100"}
-			.friend.masonry-brick{ "ng-repeat" => "friend in friends | filterByGender:showGender | orderBy:friend.name"}
-				.hang-out
-					%a{"ng-click" => "updateInterest({{friend.id}}, false)"} HO
-				%img{"ng-src" => '{{friend.picture.data.url}}', :alt => "{{friend.name}}", :title => "{{friend.name}}"}
-				.bang
-					%a{"ng-click" => "updateInterest({{friend.id}}, true)"} BA
+	.row
+		.col-md-8
+			.appcast
+				%form.form-inline{:role => "form"}
+					.form-group
+						.input-group
+							%span.input-group-addon AppCast Name
+							%input.form-control{:type => "text"}
+		.col-md-4
+			.panel.panel-info
+				.panel-heading
+					%h3.panel-title Step by step instructions
+				.panel-body
+					%p
+						Hi, great to have you on board! To host you appcast all you need to do is follow this steps:
+					%ol
+						%li
+							Download and bundle this special version of
+							%a{:href => "http://github.com/pawelniewie/sparkle"} Sparkle
+						%li
+							Add it to your project
+						%li
+							Add this little helper to you build
+						%li
+							Before releasing run git tag -a version
+						%li
+							Build for Archiving
+						%li
+							Export the app (sign in with a Developer certificate)
+						%li
+							Run appcast upload with the app file
+						%li
+							Your appcast was updated and clients are getting the new version!
