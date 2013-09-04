@@ -1,9 +1,14 @@
 var kfz = angular.module('appcasts', []).
-	factory('AppCasts', ['$http', function($http) {
+	factory('Appcasts', ['$http', function($http) {
 		return {
 			get: function(appcastId, callback) {
 				$http.get('/appcasts/' + appcastId).success(function(data) {
 					callback(data);
+				});
+			},
+			put: function(appcastId, data, callback) {
+				$http.put('/appcasts/' + appcastId, data).success(function(result) {
+					callback(result);
 				});
 			}
 		};
@@ -13,11 +18,21 @@ var kfz = angular.module('appcasts', []).
 			.otherwise({ redirectTo: '/'});
 	});
 
-function VersionsCtrl($scope, AppCasts) {
+function VersionsCtrl($scope, $log, Appcasts) {
+	$scope.appcast = {};
+	$scope.$log = $log;
+
 	$scope.init = function VersionsCtrlInit(appcastId) {
 		$scope.appcastId = appcastId;
-		AppCasts.get($scope.appcastId, function(data) {
+		Appcasts.get($scope.appcastId, function(data) {
 			$scope.appcast = data;
 		});
 	};
+
+	$scope.saveAppcast = function() {
+		$log.info("New value " + $scope.appcast.name);
+		Appcasts.put($scope.appcastId, {name: $scope.appcast.name}, function(data) {
+			$scope.appcast = data;
+		});
+	}
 };

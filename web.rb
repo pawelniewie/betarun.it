@@ -187,7 +187,12 @@ end
 put '/appcasts/:id' do |id|
 	content_type :json
 	data = JSON.parse(request.body.read)
-	Appcast.find(id).update(data).to_json
+	appcast = Appcast.find(id)
+	if appcast.update_attributes(data)
+		Appcast.find(id).to_json
+	else
+		appcast.to_json
+	end
 end
 
 get '/appcasts/:id' do |id|

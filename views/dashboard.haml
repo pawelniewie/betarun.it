@@ -15,7 +15,7 @@
 					.form-group
 						.input-group
 							%span.input-group-addon AppCast Name
-							%input.form-control{:type => "text", "ng-model" => "appcast.name"}
+							%input.form-control{:type => "text", "ng-model" => "appcast.name", "ng-change" => "saveAppcast()"}
 			.versions
 				.version{ "ng-repeat" => "version in versions"}
 					%span.title = {{version.title}}
