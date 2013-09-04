@@ -19,6 +19,9 @@
 			.versions
 				.version{ "ng-repeat" => "version in versions"}
 					%span.title = {{version.title}}
+				.empty.alert.alert-info{ "ng-show" => "!appcast.versions || appcast.versions.length == 0"}
+					There are currently no versions defined for this appcast.
+
 		.col-md-4
 			.panel.panel-info
 				.panel-heading
