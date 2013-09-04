@@ -67,14 +67,17 @@ helpers do
   end
 
   def access_token
-    session[:access_token] || access_token_from_cookie
+  	if session and session[:access_token]
+  		return session[:access_token]
+  	end
+  	access_token_from_cookie
   end
 end
 
 class User
 	include Mongoid::Document
 
-	has_many :appcasts, class_name: "AppCast"
+	has_many :appcasts
 
 	field :email, type: String
 	field :fullName, type: String
@@ -84,7 +87,7 @@ class User
 	index({ email: 1 }, { unique: true })
 end
 
-class AppCast
+class Appcast
     include Mongoid::Document
 
 		belongs_to :user
@@ -129,8 +132,10 @@ get '/' do
 end
 
 get '/dashboard' do
-	return '/' if not access_token
-	haml :dashboard
+	redirect '/' if not access_token or session[:user_id].nil?
+	user = User.find(session[:user_id])
+	appcast = Appcast.find(user.appcast_ids[0])
+	haml :dashboard, :locals => {:user => user, :appcast => appcast}
 end
 
 # Allows for direct oauth authentication
@@ -170,42 +175,42 @@ end
 
 get '/appcasts' do
 	content_type :json
-	appcasts = AppCast.all
+	appcasts = Appcast.all
 	appcasts.to_json
 end
 
 post '/appcasts' do
 	content_type :json
-	AppCast.create!(params).to_json
+	Appcast.create!(params).to_json
 end
 
 put '/appcasts/:id' do |id|
 	content_type :json
 	data = JSON.parse(request.body.read)
-	AppCast.find(id).update(data).to_json
+	Appcast.find(id).update(data).to_json
 end
 
 get '/appcasts/:id' do |id|
 	content_type :json
-	AppCast.find(id).to_json
+	Appcast.find(id).to_json
 end
 
 post '/appcasts/:id/items' do |id|
 	content_type :json
-	AppCast.find(id).items.push(Item.new(params)).to_json
+	Appcast.find(id).items.push(Item.new(params)).to_json
 end
 
 get '/appcasts/:id/items' do |id|
 	content_type :json
-	AppCast.find(id).items.to_json
+	Appcast.find(id).items.to_json
 end
 
 get '/appcasts/:id/feed' do |id|
 	content_type :xml
-	erb :appcast, :locals => { :appcast => AppCast.find(id) }
+	erb :appcast, :locals => { :appcast => Appcast.find(id) }
 end
 
 get '/appcasts/:id/download/latest' do |id|
 	content_type :xml
-	erb :appcast, :locals => { :appcast => AppCast.find(id) }
+	erb :appcast, :locals => { :appcast => Appcast.find(id) }
 end

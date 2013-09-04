@@ -4,7 +4,7 @@
 - content_for(:scripts) do
 	%script{:src => "/javascripts/dashboard.js"}
 
-.container{"ng-controller" => "DashboardCtrl"}
+.container{"ng-controller" => "VersionsCtrl", "ng-init" => "init('" + appcast._id + "')"}
 	.header
 		%h3.text-muted=settings.appname
 	%hr/
@@ -15,7 +15,10 @@
 					.form-group
 						.input-group
 							%span.input-group-addon AppCast Name
-							%input.form-control{:type => "text"}
+							%input.form-control{:type => "text", "ng-model" => "appcast.name"}
+			.versions
+				.version{ "ng-repeat" => "version in versions"}
+					%span.title = {{version.title}}
 		.col-md-4
 			.panel.panel-info
 				.panel-heading
