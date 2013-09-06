@@ -12,6 +12,21 @@ unless ENV["FACEBOOK_APP_ID"] && ENV["FACEBOOK_SECRET"]
   abort("missing env vars: please set FACEBOOK_APP_ID and FACEBOOK_SECRET with your app credentials")
 end
 
+assets do
+	serve '/dragdrop', :from => "vendor/angularjs-drag-drop-upload"
+	js :dragdrop, [
+		"/dragdrop/assets/js/jquery.ui.widget.js",
+		"/dragdrop/assets/js/jquery.iframe-transport.js",
+		"/dragdrop/assets/js/jquery.fileupload.js",
+		"/dragdrop/assets/js/jquery.knob.js",
+		'/dragdrop/*.js'
+	]
+
+	css :dragdrop, [
+		'/dragdrop/assets/css/*.css'
+	]
+end
+
 configure do
 	enable :sessions
 

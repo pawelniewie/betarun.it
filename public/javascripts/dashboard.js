@@ -1,4 +1,4 @@
-var kfz = angular.module('appcasts', []).
+var kfz = angular.module('appcasts', [ 'drag-drop-upload']).
 	factory('Appcasts', ['$http', function($http) {
 		return {
 			get: function(appcastId, callback) {

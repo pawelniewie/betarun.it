@@ -1,3 +1,4 @@
+vendor/install
 .bundle
 *.sublime-*
 .env
