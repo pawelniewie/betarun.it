@@ -1,0 +1,3 @@
+[submodule "vendor/angularjs-drag-drop-upload"]
+	path = vendor/angularjs-drag-drop-upload
+	url = https://github.com/clouddueling/angularjs-drag-drop-upload.git
