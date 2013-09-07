@@ -1,29 +1,40 @@
 var kfz = angular.module('appcasts', [ 'drag-drop-upload']).
-	factory('Appcasts', ['$http', function($http) {
-		return {
-			get: function(appcastId, callback) {
-				$http.get('/appcasts/' + appcastId).success(function(data) {
-					callback(data);
-				});
-			},
-			put: function(appcastId, data, callback) {
-				$http.put('/appcasts/' + appcastId, data).success(function(result) {
-					callback(result);
-				});
-			}
-		};
-	}]).
-	config(function($routeProvider) {
-		$routeProvider.when('/', {controller: VersionsCtrl, templateUrl: 'versions.html'})
-			.otherwise({ redirectTo: '/'});
-	});
+factory('Appcasts', ['$http', function($http) {
+	return {
+		get: function(appcastId, callback) {
+			$http.get('/appcasts/' + appcastId).success(function(data) {
+				callback(data);
+			});
+		},
+		put: function(appcastId, data, callback) {
+			$http.put('/appcasts/' + appcastId, data).success(function(result) {
+				callback(result);
+			});
+		}
+	};
+}]).
+config(function($routeProvider) {
+	$routeProvider.when('/', {controller: VersionsCtrl, templateUrl: 'versions.html'})
+	.otherwise({ redirectTo: '/'});
+});
 
 function VersionsCtrl($scope, $log, Appcasts) {
 	$scope.appcast = {};
 	$scope.$log = $log;
 
+	$scope.uploadComplete = function(e, data) {
+	};
+
+	$scope.uploadProgress = function(progress, e, data) {
+		l(progress);
+	};
+
+	$scope.uploadError = function(e, data) {
+	};
+
 	$scope.init = function VersionsCtrlInit(appcastId) {
 		$scope.appcastId = appcastId;
+		$scope.appcastUrl = "/appcasts/" + appcastId + "/items";
 		Appcasts.get($scope.appcastId, function(data) {
 			$scope.appcast = data;
 		});

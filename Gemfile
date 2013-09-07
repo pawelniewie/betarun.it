@@ -11,6 +11,7 @@ gem "haml"
 gem "sass"
 gem "compass"
 gem "koala"
+gem "aws-sdk"
 
 group :development do
 	gem 'sinatra-reloader'

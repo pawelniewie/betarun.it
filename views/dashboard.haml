@@ -19,7 +19,7 @@
 							%span.input-group-addon AppCast Name
 							%input.form-control{:type => "text", "ng-model" => "appcast.name", "ng-change" => "saveAppcast()"}
 
-			%div{:action => "main.contactImportAction", "clear-on-complete" => "true", "drag-drop-upload" => "", "on-complete" => "uploadComplete(e, data)", "on-error" => "uploadError(e, data)", "on-progress" => "uploadProgress(progress, e, data)"}
+			%div{:action => "appcastUrl", "clear-on-complete" => "true", "drag-drop-upload" => "", "on-complete" => "uploadComplete(e, data)", "on-error" => "uploadError(e, data)", "on-progress" => "uploadProgress(progress, e, data)"}
 
 			.versions
 				.version{ "ng-repeat" => "version in versions"}

@@ -87,6 +87,15 @@ helpers do
   	end
   	access_token_from_cookie
   end
+
+  def upload(filename, file)
+    s3 = AWS::S3.new(
+      :access_key_id     => ENV['AWS_ACCESS_KEY_ID'],
+      :secret_access_key => ENV['AWS_SECRET_ACCESS_KEY']
+    )
+    obj = s3.buckets[ENV['S3_BUCKET_NAME']].objects[filename].write(file)
+    return obj.public_url({:secure => true})
+  end
 end
 
 class User
@@ -217,7 +226,15 @@ end
 
 post '/appcasts/:id/items' do |id|
 	content_type :json
-	Appcast.find(id).items.push(Item.new(params)).to_json
+	appcast = Appcast.find(id)
+	version = Item.new(params.except('file'))
+	versions = appcast.items.push(version)
+	if (!params['file'][:filename].nil? and !params['file'][:tempfile].nil?)
+		url = upload(appcast._id.to_s + "/" + version._id.to_s, params['file'][:tempfile])
+		version.url = url
+		version.save()
+	end
+	versions.to_json
 end
 
 get '/appcasts/:id/items' do |id|

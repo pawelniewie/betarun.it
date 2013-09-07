@@ -8,6 +8,10 @@ GEM
       i18n (~> 0.6, >= 0.6.4)
       multi_json (~> 1.0)
     addressable (2.3.5)
+    aws-sdk (1.17.0)
+      json (~> 1.4)
+      nokogiri (< 1.6.0)
+      uuidtools (~> 2.1)
     backports (3.3.3)
     bson (1.9.2)
     bson_ext (1.9.2)
@@ -25,6 +29,7 @@ GEM
       tilt
     i18n (0.6.5)
     jsmin (1.0.1)
+    json (1.8.0)
     koala (1.6.0)
       addressable (~> 2.2)
       faraday (~> 0.8)
@@ -39,6 +44,7 @@ GEM
     moped (1.5.1)
     multi_json (1.7.9)
     multipart-post (1.2.0)
+    nokogiri (1.5.10)
     origin (1.1.0)
     rack (1.5.2)
     rack-protection (1.5.0)
@@ -66,11 +72,13 @@ GEM
       sinatra-contrib
     tilt (1.4.1)
     tzinfo (0.3.37)
+    uuidtools (2.1.4)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
+  aws-sdk
   bson_ext
   compass
   haml
