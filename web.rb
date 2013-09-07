@@ -130,7 +130,7 @@ class Item
 
 		embedded_in :appcast
 
-		field :title, type: String
+		field :title, type: String, default: "Version 1"
 		field :description, type: String
 		field :minimumSystemVersion, type: String
 		field :pubDate, type: Time, default: -> { Time.now }
@@ -178,6 +178,12 @@ get '/auth/success' do
 	@graph  = Koala::Facebook::API.new(access_token)
 
 	profile = @graph.get_object("me")
+	if not profile
+		redirect '/'
+		return nil
+	end
+
+	profile = profile.with_indifferent_access
 
 	user = User.where(email: profile[:email]).first
 	if not user
@@ -205,7 +211,7 @@ end
 
 post '/appcasts' do
 	content_type :json
-	Appcast.create!(params).to_json
+	Appcast.create!(params.slice(Appcast.fields.keys)).to_json
 end
 
 put '/appcasts/:id' do |id|
@@ -227,14 +233,26 @@ end
 post '/appcasts/:id/items' do |id|
 	content_type :json
 	appcast = Appcast.find(id)
-	version = Item.new(params.except('file'))
-	versions = appcast.items.push(version)
-	if (!params['file'][:filename].nil? and !params['file'][:tempfile].nil?)
-		url = upload(appcast._id.to_s + "/" + version._id.to_s, params['file'][:tempfile])
+	version = Item.new(params.slice(Item.fields.keys))
+	appcast.items.push(version)
+	if (!params[:file][:filename].nil? and !params[:file][:tempfile].nil?)
+		url = upload(appcast._id.to_s + "/" + version._id.to_s + File.extname(params[:file][:filename]), params['file'][:tempfile])
 		version.url = url
+		version.size = File.size(params[:file][:tempfile])
 		version.save()
 	end
-	versions.to_json
+	version.to_json
+end
+
+put '/appcasts/:appcastId/items/:itemId' do |appcastId, itemId|
+	content_type :json
+	data = JSON.parse(request.body.read)
+	version = Appcast.items.find(itemId)
+	if version.update_attributes(data)
+		Appcast.items.find(id).to_json
+	else
+		version.to_json
+	end
 end
 
 get '/appcasts/:id/items' do |id|
