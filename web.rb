@@ -14,7 +14,7 @@ end
 
 assets do
 	serve '/dragdrop', :from => "vendor/angularjs-drag-drop-upload"
-	js :dragdrop, '/dragdrop/dragdrop.js' [
+	js :dragdrop, '/dragdrop/dragdrop.js', [
 		"/dragdrop/assets/js/jquery.ui.widget.js",
 		"/dragdrop/assets/js/jquery.iframe-transport.js",
 		"/dragdrop/assets/js/jquery.fileupload.js",
@@ -22,7 +22,7 @@ assets do
 		'/dragdrop/*.js'
 	]
 
-	css :dragdrop, '/dragdrop/dragdrop.css' [
+	css :dragdrop, '/dragdrop/dragdrop.css', [
 		'/dragdrop/assets/css/*.css'
 	]
 end
