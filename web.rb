@@ -5,33 +5,22 @@ Bundler.require
 Mongoid.load!("mongoid.yml")
 
 class App < Sinatra::Base
-
 	set :root, File.dirname(__FILE__)
+	set :assets, Sprockets::Environment.new(root)
+	set :precompile,    [ /\w+\.(?!js|css).+/, /application.(css|js)$/ ]
+	set :assets_prefix, "/assets"
+	set :digest_assets, false
+	set(:assets_path)   { File.join public_folder, assets_prefix }
 
 	register Sinatra::CompassSupport
-	helpers Sinatra::ContentFor
+	register Sinatra::Contrib
 	register Sinatra::Namespace
+
+	helpers Sinatra::ContentFor
 
 	# See https://developers.facebook.com/docs/reference/api/permissions/
 	# for a full list of permissions
 	FACEBOOK_SCOPE = 'email,publish_actions,publish_stream'
-
-	register Sinatra::AssetPack
-	assets do
-		serve '/dragdrop-js', :from => "vendor/angularjs-drag-drop-upload"
-		js :dragdrop, '/dragdrop-js/dragdrop.js', [
-			"/dragdrop-js/assets/js/jquery.ui.widget.js",
-			"/dragdrop-js/assets/js/jquery.iframe-transport.js",
-			"/dragdrop-js/assets/js/jquery.fileupload.js",
-			"/dragdrop-js/assets/js/jquery.knob.js",
-			'/dragdrop-js/*.js'
-		]
-
-		serve '/dragdrop-css', :from => "vendor/angularjs-drag-drop-upload/assets/css"
-		css :dragdrop, '/dragdrop-css/dragdrop.css', [
-			'/dragdrop-css/style.css'
-		]
-	end
 
 	configure do
 		enable :sessions
@@ -40,6 +29,20 @@ class App < Sinatra::Base
 
 	  set :public_dir, File.dirname(__FILE__) + '/public'
 	  set :static, true
+	  set :assets, Sprockets::Environment.new
+
+	  %w{javascripts stylesheets images}.each do |type|
+      assets.append_path "assets/#{type}"
+    end
+    assets.append_path "vendor/angularjs-drag-drop-upload"
+
+    Sprockets::Helpers.configure do |config|
+      config.environment = assets
+      config.prefix      = assets_prefix
+      config.digest      = digest_assets
+      config.public_path = public_folder
+      config.debug       = true if development?
+    end
 
 	  set :haml, { :format => :html5, :escape_html => true }
 	  set :scss, { :style => :compact, :debug_info => false }
@@ -53,6 +56,8 @@ class App < Sinatra::Base
 	end
 
 	before do
+		expires 500, :public, :must_revalidate
+
 	  # HTTPS redirect
 	  if settings.environment == :production && request.scheme != 'https'
 	    redirect "https://#{request.env['HTTP_HOST']}"
@@ -60,6 +65,8 @@ class App < Sinatra::Base
 	end
 
 	helpers do
+		include Sprockets::Helpers
+
 	  def host
 	    request.env['HTTP_HOST']
 	  end
@@ -150,11 +157,6 @@ class App < Sinatra::Base
 	error(Koala::Facebook::APIError) do
 	  session[:access_token] = nil
 	  redirect "/auth/facebook"
-	end
-
-	get '/stylesheets/:name.css' do
-	  content_type 'text/css', :charset => 'utf-8'
-	  scss(:"stylesheets/#{params[:name]}" )
 	end
 
 	get '/' do

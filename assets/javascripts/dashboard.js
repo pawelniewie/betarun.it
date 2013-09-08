@@ -1,3 +1,8 @@
+//= require assets/js/jquery.ui.widget
+//= require assets/js/jquery.knob
+//= require assets/js/jquery.iframe-transport
+//= require assets/js/jquery.fileupload
+//= require directive.js
 var kfz = angular.module('appcasts', [ 'drag-drop-upload']).
 factory('Appcasts', ['$http', function($http) {
 	return {
