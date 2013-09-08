@@ -15,13 +15,10 @@ gem "aws-sdk"
 gem 'sprockets'
 gem 'sprockets-helpers'
 gem 'sprockets-sass'
+gem "yui-compressor"
+gem "closure-compiler"
 
 group :development do
 	gem 'sinatra-reloader'
 	# gem "guard-sprockets2"
-end
-
-group :production do
-	gem "yui-compressor"
-	gem "closure-compiler"
 end

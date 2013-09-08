@@ -28,7 +28,6 @@ class App < Sinatra::Base
 		set :appname, "AppCasts"
 
 	  set :public_dir, File.dirname(__FILE__) + '/public'
-	  set :static, true
 	  set :assets, Sprockets::Environment.new
 
 	  %w{javascripts stylesheets images}.each do |type|
