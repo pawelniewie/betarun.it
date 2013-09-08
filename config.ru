@@ -1,11 +1,10 @@
 $stdout.sync = true
 
-require 'rubygems'
-require 'bundler'
-
-Bundler.require
-
-set :root, File.dirname(__FILE__)
-
 require './web.rb'
-run Sinatra::Application
+
+unless ENV["FACEBOOK_APP_ID"] && ENV["FACEBOOK_SECRET"]
+  abort("missing env vars: please set FACEBOOK_APP_ID and FACEBOOK_SECRET with your app credentials")
+end
+
+App.set :run, false
+run App
