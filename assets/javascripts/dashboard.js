@@ -18,10 +18,11 @@ factory('Appcasts', ['$http', function($http) {
 		}
 	};
 }]).
-config(function($routeProvider) {
-	$routeProvider.when('/', {controller: VersionsCtrl, templateUrl: 'versions.html'})
-	.otherwise({ redirectTo: '/'});
-});
+config(['$routeProvider', function($routeProvider) {
+	$routeProvider
+		.when('/', {controller: VersionsCtrl, templateUrl: 'versions.html'})
+		.otherwise({ redirectTo: '/'});
+}]);
 
 var VersionsCtrl = ['$scope', '$log', 'Appcasts', function VersionsCtrl($scope, $log, Appcasts) {
 	$scope.appcast = {};
@@ -49,5 +50,5 @@ var VersionsCtrl = ['$scope', '$log', 'Appcasts', function VersionsCtrl($scope, 
 		Appcasts.put($scope.appcastId, {name: $scope.appcast.name}, function(data) {
 			$scope.appcast = data;
 		});
-	}
+	};
 }];

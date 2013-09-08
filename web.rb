@@ -63,9 +63,9 @@ class App < Sinatra::Base
 		expires 500, :public, :must_revalidate
 
 	  # HTTPS redirect
-	  if settings.environment == :production && request.scheme != 'https'
-	    redirect "https://#{request.env['HTTP_HOST']}"
-	  end
+	  # if settings.environment == :production && request.scheme != 'https'
+	    # redirect "https://#{request.env['HTTP_HOST']}"
+	  # end
 	end
 
 	helpers do
