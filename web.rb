@@ -13,17 +13,18 @@ unless ENV["FACEBOOK_APP_ID"] && ENV["FACEBOOK_SECRET"]
 end
 
 assets do
-	serve '/dragdrop', :from => "vendor/angularjs-drag-drop-upload"
-	js :dragdrop, '/dragdrop/dragdrop.js', [
-		"/dragdrop/assets/js/jquery.ui.widget.js",
-		"/dragdrop/assets/js/jquery.iframe-transport.js",
-		"/dragdrop/assets/js/jquery.fileupload.js",
-		"/dragdrop/assets/js/jquery.knob.js",
-		'/dragdrop/*.js'
+	serve '/dragdrop-js', :from => "vendor/angularjs-drag-drop-upload"
+	js :dragdrop, '/dragdrop-js/dragdrop.js', [
+		"/dragdrop-js/assets/js/jquery.ui.widget.js",
+		"/dragdrop-js/assets/js/jquery.iframe-transport.js",
+		"/dragdrop-js/assets/js/jquery.fileupload.js",
+		"/dragdrop-js/assets/js/jquery.knob.js",
+		'/dragdrop-js/*.js'
 	]
 
-	css :dragdrop, '/dragdrop/dragdrop.css', [
-		'/dragdrop/assets/css/style.css'
+	serve '/dragdrop-css', :from => "vendor/angularjs-drag-drop-upload/assets/css"
+	css :dragdrop, '/dragdrop-css/dragdrop.css', [
+		'/dragdrop-css/style.css'
 	]
 end
 
