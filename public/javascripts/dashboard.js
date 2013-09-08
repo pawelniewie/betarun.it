@@ -26,7 +26,6 @@ function VersionsCtrl($scope, $log, Appcasts) {
 	};
 
 	$scope.uploadProgress = function(progress, e, data) {
-		l(progress);
 	};
 
 	$scope.uploadError = function(e, data) {
