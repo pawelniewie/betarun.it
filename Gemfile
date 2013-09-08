@@ -6,7 +6,7 @@ gem 'mongoid'
 gem 'bson_ext'
 gem 'sinatra'
 gem "sinatra-contrib"
-gem "sinatra-assetpack"
+gem "sinatra-assetpack", :require => 'sinatra/assetpack'
 gem "haml"
 gem "sass"
 gem "compass"
