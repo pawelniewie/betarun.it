@@ -23,5 +23,5 @@ end
 
 group :production do
 	gem "yui-compressor"
-	gem "closure"
+	gem "closure-compiler"
 end
