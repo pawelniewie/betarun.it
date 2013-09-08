@@ -53,6 +53,11 @@ class App < Sinatra::Base
 	configure :production do
 		set :raise_errors, false
 		set :show_exceptions, false
+
+		assets.js_compressor = Closure::Compiler.new
+		assets.css_compressor = YUI::CssCompressor.new
+		uid = Digest::MD5.hexdigest(File.dirname(__FILE__))[0,8]
+		assets.cache = Sprockets::Cache::FileStore.new("/tmp/sinatra-#{uid}")
 	end
 
 	before do
