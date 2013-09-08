@@ -23,7 +23,7 @@ config(function($routeProvider) {
 	.otherwise({ redirectTo: '/'});
 });
 
-function VersionsCtrl($scope, $log, Appcasts) {
+var VersionsCtrl = ['$scope', '$log', 'Appcasts', function VersionsCtrl($scope, $log, Appcasts) {
 	$scope.appcast = {};
 	$scope.$log = $log;
 
@@ -50,4 +50,4 @@ function VersionsCtrl($scope, $log, Appcasts) {
 			$scope.appcast = data;
 		});
 	}
-};
+}];

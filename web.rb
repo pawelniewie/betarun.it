@@ -9,7 +9,7 @@ class App < Sinatra::Base
 	set :assets, Sprockets::Environment.new(root)
 	set :precompile,    [ /\w+\.(?!js|css).+/, /application.(css|js)$/ ]
 	set :assets_prefix, "/assets"
-	set :digest_assets, false
+	set :digest_assets, true
 	set(:assets_path)   { File.join public_folder, assets_prefix }
 
 	register Sinatra::CompassSupport
