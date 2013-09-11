@@ -26,7 +26,7 @@
 						.versionString {{version.versionString}}
 						.versionNumber {{version.versionNumber}}
 					.panel-body
-						.desciption {{version.description}}
+						.desciption {{version.description | default: "No description available."}}
 						.pubDate {{version.pubDate}}
 						.size {{version.size}}
 						.draft {{version.draft}}

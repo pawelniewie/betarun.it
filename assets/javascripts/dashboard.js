@@ -3,7 +3,8 @@
 //= require assets/js/jquery.iframe-transport
 //= require assets/js/jquery.fileupload
 //= require directive.js
-var kfz = angular.module('appcasts', [ 'drag-drop-upload']).
+//= require "angular-filters"
+var kfz = angular.module('appcasts', [ 'drag-drop-upload', 'frapontillo.ex.filters']).
 factory('Appcasts', ['$http', function($http) {
 	return {
 		get: function(appcastId, callback) {

@@ -34,6 +34,7 @@ class App < Sinatra::Base
       assets.append_path "assets/#{type}"
     end
     assets.append_path "vendor/angularjs-drag-drop-upload"
+    assets.append_path "vendor/bower_components/angular-filters/build"
 
     Sprockets::Helpers.configure do |config|
       config.environment = assets
