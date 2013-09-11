@@ -1,5 +1,9 @@
 - content_for(:head) do
   != stylesheet_tag "index"
+- content_for(:scripts) do
+  :javascript
+    angular.module('appcasts', []);
+    mixpanel.track("Home");
 
 .container-narrow
   .header
