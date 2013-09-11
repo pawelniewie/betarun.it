@@ -3,6 +3,8 @@
 
 - content_for(:scripts) do
 	!= javascript_tag "dashboard"
+	:javascript
+		mixpanel.alias("#{user.email}")
 
 .container{"ng-controller" => "VersionsCtrl", "ng-init" => "init('" + appcast._id + "')"}
 	.header
@@ -20,17 +22,25 @@
 			%div{:action => "appcastUrl", "clear-on-complete" => "true", "drag-drop-upload" => "", "on-complete" => "uploadComplete(e, data)", "on-error" => "uploadError(e, data)", "on-progress" => "uploadProgress(progress, e, data)"}
 
 			.versions
-				.version.panel.panel-info{ "ng-repeat" => "version in appcast.items"}
+				.version.panel.panel-info{ "ng-repeat" => "version in appcast.items" }
 					.panel-heading
-						.title {{version.title}}
-						.versionString {{version.versionString}}
-						.versionNumber {{version.versionNumber}}
+						.pull-left
+							.title {{version.title}}
+							.versionString {{version.versionString}}
+							.versionNumber {{version.versionNumber}}
+						.pull-right
+							%a{} Edit
+						.clearfix
 					.panel-body
 						.desciption {{version.description | default: "No description available."}}
-						.pubDate {{version.pubDate}}
-						.size {{version.size}}
-						.draft {{version.draft}}
-						.url {{version.url}}
+						.pull-left
+							Published
+							%time.pubDate.relative {{version.pubDate}}
+							%span.draft {{version.draft}}
+						.pull-right
+							%span.size {{version.size | bytes}}
+							%a.url{:href => "{{version.url}}"} Download
+						.clearfix
 				.empty.alert.alert-info{ "ng-show" => "!appcast.items || appcast.items.length == 0"}
 					There are currently no versions defined for this appcast. Drag and drop your app here to add a new version.
 

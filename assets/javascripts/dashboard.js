@@ -4,7 +4,8 @@
 //= require assets/js/jquery.fileupload
 //= require directive.js
 //= require "angular-filters"
-var kfz = angular.module('appcasts', [ 'drag-drop-upload', 'frapontillo.ex.filters']).
+//= require "ng-time-relative"
+var kfz = angular.module('appcasts', [ 'drag-drop-upload', 'frapontillo.ex.filters', 'timeRelative']).
 factory('Appcasts', ['$http', function($http) {
 	return {
 		get: function(appcastId, callback) {
@@ -18,12 +19,21 @@ factory('Appcasts', ['$http', function($http) {
 			});
 		}
 	};
-}]).
-config(['$routeProvider', function($routeProvider) {
+}])
+.config(['$routeProvider', function($routeProvider) {
 	$routeProvider
 		.when('/', {controller: VersionsCtrl, templateUrl: 'versions.html'})
 		.otherwise({ redirectTo: '/'});
-}]);
+}])
+.filter('bytes', function() {
+	return function(bytes, precision) {
+		if (isNaN(parseFloat(bytes)) || !isFinite(bytes)) return '-';
+		if (typeof precision === 'undefined') precision = 1;
+		var units = ['bytes', 'kB', 'MB', 'GB', 'TB', 'PB'],
+			number = Math.floor(Math.log(bytes) / Math.log(1024));
+		return (bytes / Math.pow(1024, Math.floor(number))).toFixed(precision) +  ' ' + units[number];
+	};
+});
 
 var VersionsCtrl = ['$scope', '$log', 'Appcasts', function VersionsCtrl($scope, $log, Appcasts) {
 	$scope.appcast = {};
