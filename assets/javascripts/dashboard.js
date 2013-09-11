@@ -37,18 +37,22 @@ var VersionsCtrl = ['$scope', '$log', 'Appcasts', function VersionsCtrl($scope, 
 	$scope.uploadError = function(e, data) {
 	};
 
-	$scope.init = function VersionsCtrlInit(appcastId) {
-		$scope.appcastId = appcastId;
-		$scope.appcastUrl = "/appcasts/" + appcastId + "/items";
+	$scope.getAppcast = function getAppcast() {
 		Appcasts.get($scope.appcastId, function(data) {
 			$scope.appcast = data;
 		});
 	};
 
-	$scope.saveAppcast = function() {
+	$scope.saveAppcast = function saveAppcast() {
 		$log.info("New value " + $scope.appcast.name);
 		Appcasts.put($scope.appcastId, {name: $scope.appcast.name}, function(data) {
 			$scope.appcast = data;
 		});
+	};
+
+	$scope.init = function VersionsCtrlInit(appcastId) {
+		$scope.appcastId = appcastId;
+		$scope.appcastUrl = "/appcasts/" + appcastId + "/items";
+		$scope.getAppcast();
 	};
 }];

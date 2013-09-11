@@ -20,9 +20,18 @@
 			%div{:action => "appcastUrl", "clear-on-complete" => "true", "drag-drop-upload" => "", "on-complete" => "uploadComplete(e, data)", "on-error" => "uploadError(e, data)", "on-progress" => "uploadProgress(progress, e, data)"}
 
 			.versions
-				.version{ "ng-repeat" => "version in versions"}
-					%span.title = {{version.title}}
-				.empty.alert.alert-info{ "ng-show" => "!appcast.versions || appcast.versions.length == 0"}
+				.version.panel.panel-info{ "ng-repeat" => "version in appcast.items"}
+					.panel-heading
+						.title {{version.title}}
+						.versionString {{version.versionString}}
+						.versionNumber {{version.versionNumber}}
+					.panel-body
+						.desciption {{version.description}}
+						.pubDate {{version.pubDate}}
+						.size {{version.size}}
+						.draft {{version.draft}}
+						.url {{version.url}}
+				.empty.alert.alert-info{ "ng-show" => "!appcast.items || appcast.items.length == 0"}
 					There are currently no versions defined for this appcast. Drag and drop your app here to add a new version.
 
 		.col-md-4

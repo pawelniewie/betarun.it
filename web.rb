@@ -63,9 +63,9 @@ class App < Sinatra::Base
 		expires 500, :public, :must_revalidate
 
 	  # HTTPS redirect
-	  # if settings.environment == :production && request.scheme != 'https'
-	    # redirect "https://#{request.env['HTTP_HOST']}"
-	  # end
+	  if settings.environment == :production && request.scheme != 'https'
+	    redirect "https://#{request.env['HTTP_HOST']}"
+	  end
 	end
 
 	helpers do
@@ -155,6 +155,7 @@ class App < Sinatra::Base
 			field :versionNumber, type: Integer
 			field :versionString, type: String
 			field :size, type: Integer
+			field :draft, type: Boolean, default: true
 	end
 
 	# the facebook session expired! reset ours and restart the process
