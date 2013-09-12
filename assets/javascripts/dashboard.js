@@ -2,10 +2,9 @@
 //= require assets/js/jquery.knob
 //= require assets/js/jquery.iframe-transport
 //= require assets/js/jquery.fileupload
-//= require directive.js
 //= require "angular-filters"
 //= require "ng-time-relative"
-var kfz = angular.module('appcasts', [ 'drag-drop-upload', 'frapontillo.ex.filters', 'timeRelative']).
+var kfz = angular.module('appcasts', ['frapontillo.ex.filters', 'timeRelative']).
 factory('Appcasts', ['$http', function($http) {
 	return {
 		get: function(appcastId, callback) {
@@ -22,7 +21,8 @@ factory('Appcasts', ['$http', function($http) {
 }])
 .config(['$routeProvider', function($routeProvider) {
 	$routeProvider
-		.when('/', {controller: VersionsCtrl, templateUrl: 'versions.html'})
+		.when('/', {controller: VersionsCtrl, templateUrl: '/partials/versions'})
+		.when('/edit/:versionId', {controller: EditVersionCtrl, templateUrl: '/partials/edit-version'})
 		.otherwise({ redirectTo: '/'});
 }])
 .filter('bytes', function() {
@@ -66,4 +66,8 @@ var VersionsCtrl = ['$scope', '$log', 'Appcasts', function VersionsCtrl($scope, 
 		$scope.appcastUrl = "/appcasts/" + appcastId + "/items";
 		$scope.getAppcast();
 	};
+}];
+
+var EditVersionCtrl = ['$scope', '$log', function($scope, $log) {
+
 }];

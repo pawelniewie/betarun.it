@@ -4,6 +4,51 @@ Bundler.require
 
 Mongoid.load!("mongoid.yml")
 
+class User
+	include Mongoid::Document
+
+	has_many :appcasts
+
+	field :email, type: String
+	field :fullName, type: String
+	field :callingName, type: String
+	field :picture, type: String
+	field :facebookToken, type: String
+	field :facebookTokenExpires, type: Time
+
+	index({ email: 1 }, { unique: true })
+end
+
+class Appcast
+    include Mongoid::Document
+
+		belongs_to :user
+    embeds_many :items
+
+    field :name, type: String
+    field :url, type: String
+    field :description, type: String
+    field :language, type: String, default: 'en'
+
+    index({ name: 1 }, { unique: true })
+end
+
+class Item
+		include Mongoid::Document
+
+		embedded_in :appcast
+
+		field :title, type: String, default: "Version 1"
+		field :description, type: String
+		field :minimumSystemVersion, type: String
+		field :pubDate, type: Time, default: -> { Time.now }
+		field :url, type: String
+		field :versionNumber, type: Integer
+		field :versionString, type: String
+		field :size, type: Integer
+		field :draft, type: Boolean, default: true
+end
+
 class App < Sinatra::Base
 	set :root, File.dirname(__FILE__)
 	set :assets, Sprockets::Environment.new(root)
@@ -23,8 +68,6 @@ class App < Sinatra::Base
 	FACEBOOK_SCOPE = 'email,publish_actions,publish_stream'
 
 	configure do
-		enable :sessions
-
 		set :appname, "AppCasts"
 
 	  set :public_dir, File.dirname(__FILE__) + '/public'
@@ -51,6 +94,10 @@ class App < Sinatra::Base
 
 	  Compass.add_project_configuration(File.join(Sinatra::Application.root, 'config', 'compass.rb'))
 	end
+
+	configure :production, :development do
+    enable :logging
+  end
 
 	configure :production do
 		set :raise_errors, false
@@ -108,6 +155,10 @@ class App < Sinatra::Base
 	  	access_token_from_cookie
 	  end
 
+	  def user_id
+	  	return session[:user_id]
+	  end
+
 	  def upload(filename, file)
 	    s3 = AWS::S3.new(
 	      :access_key_id     => ENV['AWS_ACCESS_KEY_ID'],
@@ -116,49 +167,6 @@ class App < Sinatra::Base
 	    obj = s3.buckets[ENV['S3_BUCKET_NAME']].objects[filename].write(file)
 	    return obj.public_url({:secure => true})
 	  end
-	end
-
-	class User
-		include Mongoid::Document
-
-		has_many :appcasts
-
-		field :email, type: String
-		field :fullName, type: String
-		field :callingName, type: String
-		field :picture, type: String
-
-		index({ email: 1 }, { unique: true })
-	end
-
-	class Appcast
-	    include Mongoid::Document
-
-			belongs_to :user
-	    embeds_many :items
-
-	    field :name, type: String
-	    field :url, type: String
-	    field :description, type: String
-	    field :language, type: String, default: 'en'
-
-	    index({ name: 1 }, { unique: true })
-	end
-
-	class Item
-			include Mongoid::Document
-
-			embedded_in :appcast
-
-			field :title, type: String, default: "Version 1"
-			field :description, type: String
-			field :minimumSystemVersion, type: String
-			field :pubDate, type: Time, default: -> { Time.now }
-			field :url, type: String
-			field :versionNumber, type: Integer
-			field :versionString, type: String
-			field :size, type: Integer
-			field :draft, type: Boolean, default: true
 	end
 
 	# the facebook session expired! reset ours and restart the process
@@ -171,9 +179,19 @@ class App < Sinatra::Base
 		haml :index
 	end
 
+	get '/partials/versions' do
+		redirect '/' if not user_id
+		haml :versions
+	end
+
+	get '/partials/edit-version' do
+		redirect '/' if not user_id
+		haml :editVersion
+	end
+
 	get '/dashboard' do
-		redirect '/' if not access_token or session[:user_id].nil?
-		user = User.find(session[:user_id])
+		redirect '/' if not user_id
+		user = User.find(user_id)
 		appcast = Appcast.find(user.appcast_ids[0])
 		haml :dashboard, :locals => {:user => user, :appcast => appcast}
 	end
@@ -181,41 +199,49 @@ class App < Sinatra::Base
 	# Allows for direct oauth authentication
 	get "/auth/facebook" do
 	  session[:access_token] = nil
+	  session[:user_id] = nil
 	  redirect authenticator.url_for_oauth_code(:permissions => FACEBOOK_SCOPE)
 	end
 
 	get '/auth/facebook/callback' do
 	  session[:access_token] = authenticator.get_access_token(params[:code])
-	  redirect '/auth/success'
-	end
 
-	get '/auth/success' do
-		# Get base API Connection
-		@graph  = Koala::Facebook::API.new(access_token)
+	  # Get base API Connection
+	  graph  = Koala::Facebook::API.new(access_token)
 
-		profile = @graph.get_object("me")
-		if not profile
-			redirect '/'
-			return nil
-		end
+	  profile = graph.get_object("me")
+	  if not profile
+	  	redirect '/'
+	  	return nil
+	  end
 
-		profile = profile.with_indifferent_access
+	  profile = profile.with_indifferent_access
 
-		user = User.where(email: profile[:email]).first
-		if not user
-			picture = @graph.get_picture("me")
-			user = User.create!(email: profile[:email], fullName: profile[:name], callingName: profile[:first_name], picture: picture)
-		end
-		if not user.appcasts.exists?
-			user.appcasts.push(Appcast.new(name: "Awesome Appcast"))
-		end
-		session[:user_id] = user._id
-		redirect '/dashboard'
+	  user = User.where(email: profile[:email]).first
+	  if not user
+	  	logger.info("User was not found " + profile[:email])
+	  	picture = graph.get_picture("me")
+	  	user = User.create!(email: profile[:email], fullName: profile[:name], callingName: profile[:first_name], picture: picture)
+	  end
+	  if not user.facebookToken
+	  	logger.info("Facebook token was not found " + profile[:email])
+	  	new_access_info = authenticator.exchange_access_token_info(access_token).with_indifferent_access
+	  	user.facebookToken = new_access_info[:access_token]
+	  	user.facebookTokenExpires = DateTime.now + new_access_info[:expires].to_i.seconds
+	  	user.save
+	  else
+	  	logger.info("Facebook token was found " + profile[:email])
+	  end
+	  if not user.appcasts.exists?
+	  	user.appcasts.push(Appcast.new(name: "Awesome Appcast"))
+	  end
+	  session[:user_id] = user._id.to_s
+	  redirect '/dashboard'
 	end
 
 	['/appcasts/*', '/appcasts'].each do |path|
 		before path do
-		  halt 401, "Not authorized\n" if not access_token
+		  halt 401, "Not authorized\n" if not user_id
 		end
 	end
 

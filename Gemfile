@@ -8,7 +8,7 @@ gem 'sinatra'
 gem "sinatra-contrib"
 gem "sinatra-support"
 gem "haml"
-gem "sass"
+gem "sass", :require => "sass"
 gem "compass"
 gem "koala"
 gem "aws-sdk"
