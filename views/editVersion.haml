@@ -1,0 +1,19 @@
+%form{:name => "myForm"}
+  .control-group{"ng-class" => "{error: myForm.name.$invalid}"}
+    %label Name
+    %input{:name => "name", "ng-model" => "project.name", :required => "", :type => "text"}/
+    %span.help-inline{"ng-show" => "myForm.name.$error.required"}
+      Required
+  .control-group{"ng-class" => "{error: myForm.site.$invalid}"}
+    %label Website
+    %input{:name => "site", "ng-model" => "project.site", :required => "", :type => "url"}/
+    %span.help-inline{"ng-show" => "myForm.site.$error.required"}
+      Required
+    %span.help-inline{"ng-show" => "myForm.site.$error.url"}
+      Not a URL
+  %label Description
+  %textarea{:name => "description", "ng-model" => "project.description"}
+  %br/
+  %a.btn{:href => "#/"} Cancel
+  %button.btn.btn-primary{"ng-click" => "save()", "ng-disabled" => "isClean() || myForm.$invalid"} Save
+  %button.btn.btn-danger{"ng-click" => "destroy()", "ng-show" => "project.$id"} Delete
