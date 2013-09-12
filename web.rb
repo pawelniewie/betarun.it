@@ -181,12 +181,12 @@ class App < Sinatra::Base
 
 	get '/partials/versions' do
 		redirect '/' if not user_id
-		haml :versions
+		haml :versions, {:layout => false}
 	end
 
 	get '/partials/edit-version' do
 		redirect '/' if not user_id
-		haml :editVersion
+		haml :editVersion, {:layout => false}
 	end
 
 	get '/dashboard' do
