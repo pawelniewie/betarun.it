@@ -2,9 +2,10 @@
 //= require assets/js/jquery.knob
 //= require assets/js/jquery.iframe-transport
 //= require assets/js/jquery.fileupload
+//= require directive
 //= require "angular-filters"
 //= require "ng-time-relative"
-var kfz = angular.module('appcasts', ['frapontillo.ex.filters', 'timeRelative']).
+var kfz = angular.module('appcasts', ['drag-drop-upload', 'frapontillo.ex.filters', 'timeRelative']).
 factory('Appcasts', ['$http', function($http) {
 	return {
 		get: function(appcastId, callback) {
@@ -22,7 +23,7 @@ factory('Appcasts', ['$http', function($http) {
 .config(['$routeProvider', function($routeProvider) {
 	$routeProvider
 		.when('/', {controller: VersionsCtrl, templateUrl: '/partials/versions'})
-		.when('/:appcastId/edit/:versionId', {controller: EditVersionCtrl, templateUrl: '/partials/edit-version'})
+		.when('/edit/:versionId', {controller: EditVersionCtrl, templateUrl: '/partials/edit-version'})
 		.otherwise({ redirectTo: '/'});
 }])
 .filter('bytes', function() {
@@ -42,6 +43,7 @@ var VersionsCtrl = ['$scope', '$log', 'Appcasts', function VersionsCtrl($scope, 
 	};
 
 	$scope.uploadProgress = function(progress, e, data) {
+		$scope.getAppcast();
 	};
 
 	$scope.uploadError = function(e, data) {
@@ -69,7 +71,11 @@ var VersionsCtrl = ['$scope', '$log', 'Appcasts', function VersionsCtrl($scope, 
 
 var EditVersionCtrl = ['$scope', '$log', '$http', '$routeParams', function($scope, $log, $http, $routeParams) {
 	$scope.$log = $log;
-	$scope.version = $http.get('/appcasts/' + $scope.appcastId + "/versions/" + $routeParams.versionId).success(function(data) {
-		return data;
+	$http.get('/appcasts/' + $scope.appcastId + "/versions/" + $routeParams.versionId).success(function(data) {
+		$scope.remote = data;
+		$scope.version = angular.copy($scope.remote);
+		$scope.isClean = function() {
+			return angular.equals($scope.remote, $scope.version);
+		};
 	});
 }];

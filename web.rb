@@ -273,7 +273,7 @@ class App < Sinatra::Base
 		Appcast.find(id).to_json
 	end
 
-	post '/appcasts/:id/verions' do |id|
+	post '/appcasts/:id/versions' do |id|
 		content_type :json
 		appcast = Appcast.find(id)
 		version = Version.new(params.slice(Version.fields.keys))
@@ -289,15 +289,15 @@ class App < Sinatra::Base
 
 	get '/appcasts/:appcastId/versions/:versionId' do |appcastId, versionId|
 		content_type :json
-		Version.find(versionId).to_json
+		Appcast.find(appcastId).versions.find(versionId).to_json
 	end
 
 	put '/appcasts/:appcastId/versions/:versionId' do |appcastId, versionId|
 		content_type :json
 		data = JSON.parse(request.body.read)
-		version = Appcast.versions.find(versionId)
+		version = Appcast.find(appcastId).versions.find(versionId)
 		if version.update_attributes(data)
-			Appcast.versions.find(id).to_json
+			Appcast.find(appcastId).versions.find(versionId).to_json
 		else
 			version.to_json
 		end

@@ -1,9 +1,9 @@
 %form{:role => "form"}
-  .form-group{"ng-class" => "{has-error: version.name.$invalid}"}
+  .form-group{"ng-class" => "{'has-error': version.name.$invalid}"}
     %label Version Title
     %input{:name => "title", :class => "form-control", "ng-model" => "version.title", :required => "", :type => "text"}/
 
-  .form-group{"ng-class" => "{has-error: version.name.$invalid}"}
+  .form-group{"ng-class" => "{'has-error': version.name.$invalid}"}
     %label Published on
     %input{:name => "pubDate", :class => "form-control", "ng-model" => "version.pubDate", :required => "", :type => "text"}/
 
