@@ -36,7 +36,6 @@ factory('Appcasts', ['$http', function($http) {
 });
 
 var VersionsCtrl = ['$scope', '$log', 'Appcasts', function VersionsCtrl($scope, $log, Appcasts) {
-	$scope.appcast = {};
 	$scope.$log = $log;
 
 	$scope.uploadComplete = function(e, data) {
