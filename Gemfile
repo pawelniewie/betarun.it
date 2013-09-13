@@ -17,8 +17,8 @@ gem 'sprockets-helpers'
 gem 'sprockets-sass'
 gem "yui-compressor"
 gem "closure-compiler"
+gem "puma"
 
 group :development do
 	gem 'sinatra-reloader'
-	# gem "guard-sprockets2"
 end
