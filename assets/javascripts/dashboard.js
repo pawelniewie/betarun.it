@@ -35,7 +35,7 @@ factory('Appcasts', ['$http', function($http) {
 	};
 });
 
-var VersionsCtrl = ['$scope', '$log', '$http', 'Appcasts', function VersionsCtrl($scope, $log, $http, Appcasts) {
+var VersionsCtrl = ['$scope', '$log', '$http', '$location', 'Appcasts', function VersionsCtrl($scope, $log, $http, $location, Appcasts) {
 	$scope.$log = $log;
 
 	$scope.uploadComplete = function(e, data) {
@@ -53,6 +53,16 @@ var VersionsCtrl = ['$scope', '$log', '$http', 'Appcasts', function VersionsCtrl
 		$http.put(Appcasts.appcast($scope.appcastId), {name: $scope.appcast.name}, function(data) {
 			$scope.appcast = data;
 		});
+	};
+
+	$scope.publishVersion = function(versionId, publish) {
+		$http.put(Appcasts.version($scope.appcastId, versionId), {draft: !publish}).success(function(data) {
+			$scope.loadAppcast();
+		});
+	};
+
+	$scope.editVersion = function(versionId) {
+		$location.path("/edit/" + versionId);
 	};
 
 	$scope.loadAppcast = function() {

@@ -8,14 +8,18 @@
 %div{:action => "appcastUrl", "clear-on-complete" => "true", "drag-drop-upload" => "", "on-complete" => "uploadComplete(e, data)", "on-error" => "uploadError(e, data)", "on-progress" => "uploadProgress(progress, e, data)"}
 
 .versions
-	.version.panel.panel-info{ "ng-repeat" => "version in appcast.versions" }
+	.version.panel{ "ng-repeat" => "version in appcast.versions", "ng-class" => "{'panel-default' : !version.draft, 'panel-danger' : version.draft}"}
 		.panel-heading
 			.pull-left
 				.title {{version.title}}
 				.versionString {{version.versionString}}
 				.versionNumber {{version.versionNumber}}
 			.pull-right
-				%a{ :href => "#/edit/{{version._id}}" } Edit
+				.btn-toolbar
+					.btn-group.btn-group-xs
+						%button.btn.btn-default{ "ng-click" => "editVersion(version._id)" } Edit
+						%button.btn.btn-default{ "ng-click" => "publishVersion(version._id, !appcast.draft)", "ng-show" => "version.draft" } Publish
+						%button.btn.btn-default{ "ng-click" => "publishVersion(version._id, appcast.draft)", "ng-hide" => "version.draft" } Unpublish
 			.clearfix
 		.panel-body
 			.desciption {{version.description | default: "No description available."}}
