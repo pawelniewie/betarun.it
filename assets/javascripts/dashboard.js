@@ -8,15 +8,14 @@
 var kfz = angular.module('appcasts', ['drag-drop-upload', 'frapontillo.ex.filters', 'timeRelative']).
 factory('Appcasts', ['$http', function($http) {
 	return {
-		get: function(appcastId, callback) {
-			$http.get('/appcasts/' + appcastId).success(function(data) {
-				callback(data);
-			});
+		appcast: function(appcastId) {
+			return "/appcasts/" + appcastId;
 		},
-		put: function(appcastId, data, callback) {
-			$http.put('/appcasts/' + appcastId, data).success(function(result) {
-				callback(result);
-			});
+		versions: function(appcastId) {
+			return this.appcast(appcastId) + "/versions";
+		},
+		version: function(appcastId, versionId) {
+			return this.appcast(appcastId) + "/versions/" + versionId;
 		}
 	};
 }])
@@ -36,55 +35,57 @@ factory('Appcasts', ['$http', function($http) {
 	};
 });
 
-var VersionsCtrl = ['$scope', '$log', 'Appcasts', function VersionsCtrl($scope, $log, Appcasts) {
+var VersionsCtrl = ['$scope', '$log', '$http', 'Appcasts', function VersionsCtrl($scope, $log, $http, Appcasts) {
 	$scope.$log = $log;
 
 	$scope.uploadComplete = function(e, data) {
 	};
 
 	$scope.uploadProgress = function(progress, e, data) {
-		$scope.getAppcast();
+		$scope.loadAppcast();
 	};
 
 	$scope.uploadError = function(e, data) {
 	};
 
-	$scope.getAppcast = function getAppcast() {
-		Appcasts.get($scope.appcastId, function(data) {
-			$scope.appcast = data;
-		});
-	};
-
-	$scope.saveAppcast = function saveAppcast() {
+	$scope.saveAppcast = function() {
 		$log.info("New value " + $scope.appcast.name);
-		Appcasts.put($scope.appcastId, {name: $scope.appcast.name}, function(data) {
+		$http.put(Appcasts.appcast($scope.appcastId), {name: $scope.appcast.name}, function(data) {
 			$scope.appcast = data;
 		});
 	};
 
-	$scope.init = function VersionsCtrlInit(appcastId) {
+	$scope.loadAppcast = function() {
+		$http.get(Appcasts.appcast($scope.appcastId)).success(function(data) {
+			$scope.appcast = data;
+		});
+	};
+
+	$scope.init = function(appcastId) {
 		$scope.appcastId = appcastId;
-		$scope.appcastUrl = "/appcasts/" + appcastId + "/versions";
-		$scope.getAppcast();
+		$scope.appcastUrl = Appcasts.versions(appcastId);
+		$scope.loadAppcast();
 	};
 }];
 
-var EditVersionCtrl = ['$scope', '$log', '$http', '$routeParams', '$location', function($scope, $log, $http, $routeParams, $location) {
+var EditVersionCtrl = ['$scope', '$log', '$http', '$routeParams', '$location', 'Appcasts', function($scope, $log, $http, $routeParams, $location, Appcasts) {
 	$scope.$log = $log;
-	$http.get('/appcasts/' + $scope.appcastId + "/versions/" + $routeParams.versionId).success(function(data) {
+	$http.get(Appcasts.version($scope.appcastId, $routeParams.versionId)).success(function(data) {
 		$scope.remote = data;
 		$scope.version = angular.copy($scope.remote);
 		$scope.isClean = function() {
 			return angular.equals($scope.remote, $scope.version);
 		};
 		$scope.save = function() {
-			$http.put('/appcasts/' + $scope.appcastId + "/versions/" + $scope.remote._id, $scope.version).success(function(result) {
+			$http.put(Appcasts.version($scope.appcastId, $scope.remote._id), $scope.version).success(function(result) {
 				$location.path("/");
+				$scope.loadAppcast();
 			});
 		};
 		$scope.destroy = function() {
-			$http.delete('/appcasts/' + $scope.appcastId + "/versions/" + $scope.remote._id).success(function(result) {
+			$http.delete(Appcasts.version($scope.appcastId, $scope.remote._id)).success(function(result) {
 				$location.path("/");
+				$scope.loadAppcast();
 			});
 		};
 	});
