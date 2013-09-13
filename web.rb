@@ -111,8 +111,6 @@ class App < Sinatra::Base
 	end
 
 	before do
-		expires 500, :public, :must_revalidate
-
 	  # HTTPS redirect
 	  if settings.environment == :production && request.scheme != 'https'
 	    redirect "https://#{request.env['HTTP_HOST']}"
@@ -186,6 +184,7 @@ class App < Sinatra::Base
 
 	get '/' do
 		redirect '/dashboard' if user_id
+		expires 500, :public, :must_revalidate
 		haml :index
 	end
 
@@ -252,22 +251,21 @@ class App < Sinatra::Base
 	['/appcasts/*', '/appcasts'].each do |path|
 		before path do
 		  halt 401, "Not authorized\n" if not user_id
+		  content_type :json
+		  cache_control :'no-cache'
 		end
 	end
 
 	get '/appcasts' do
-		content_type :json
 		appcasts = Appcast.all
 		appcasts.to_json
 	end
 
 	post '/appcasts' do
-		content_type :json
 		Appcast.create!(params.slice(Appcast.fields.keys)).to_json
 	end
 
 	put '/appcasts/:id' do |id|
-		content_type :json
 		data = JSON.parse(request.body.read)
 		appcast = Appcast.find(id)
 		if appcast.update_attributes(data)
@@ -278,12 +276,10 @@ class App < Sinatra::Base
 	end
 
 	get '/appcasts/:id' do |id|
-		content_type :json
 		Appcast.find(id).to_json
 	end
 
 	post '/appcasts/:id/versions' do |id|
-		content_type :json
 		appcast = Appcast.find(id)
 		version = Version.new(params.slice(Version.fields.keys))
 		appcast.versions.push(version)
@@ -298,12 +294,10 @@ class App < Sinatra::Base
 	end
 
 	get '/appcasts/:appcastId/versions/:versionId' do |appcastId, versionId|
-		content_type :json
 		Appcast.find(appcastId).versions.find(versionId).to_json
 	end
 
 	delete '/appcasts/:appcastId/versions/:versionId' do |appcastId, versionId|
-		content_type :json
 		appcast = Appcast.find(appcastId)
 		version = appcast.versions.find(versionId)
 		destroy(version.path) if version.path
@@ -312,7 +306,6 @@ class App < Sinatra::Base
 	end
 
 	put '/appcasts/:appcastId/versions/:versionId' do |appcastId, versionId|
-		content_type :json
 		data = JSON.parse(request.body.read)
 		version = Appcast.find(appcastId).versions.find(versionId)
 		if version.update_attributes(data)
@@ -323,7 +316,6 @@ class App < Sinatra::Base
 	end
 
 	get '/appcasts/:id/versions' do |id|
-		content_type :json
 		Appcast.find(id).versions.to_json
 	end
 
