@@ -22,7 +22,7 @@ factory('Appcasts', ['$http', function($http) {
 .config(['$routeProvider', function($routeProvider) {
 	$routeProvider
 		.when('/', {controller: VersionsCtrl, templateUrl: '/partials/versions'})
-		.when('/edit/:versionId', {controller: EditVersionCtrl, templateUrl: '/partials/edit-version'})
+		.when('/:appcastId/edit/:versionId', {controller: EditVersionCtrl, templateUrl: '/partials/edit-version'})
 		.otherwise({ redirectTo: '/'});
 }])
 .filter('bytes', function() {
@@ -62,11 +62,14 @@ var VersionsCtrl = ['$scope', '$log', 'Appcasts', function VersionsCtrl($scope, 
 
 	$scope.init = function VersionsCtrlInit(appcastId) {
 		$scope.appcastId = appcastId;
-		$scope.appcastUrl = "/appcasts/" + appcastId + "/items";
+		$scope.appcastUrl = "/appcasts/" + appcastId + "/versions";
 		$scope.getAppcast();
 	};
 }];
 
-var EditVersionCtrl = ['$scope', '$log', function($scope, $log) {
-
+var EditVersionCtrl = ['$scope', '$log', '$http', '$routeParams', function($scope, $log, $http, $routeParams) {
+	$scope.$log = $log;
+	$scope.version = $http.get('/appcasts/' + $scope.appcastId + "/versions/" + $routeParams.versionId).success(function(data) {
+		return data;
+	});
 }];

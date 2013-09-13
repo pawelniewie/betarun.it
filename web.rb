@@ -23,7 +23,7 @@ class Appcast
     include Mongoid::Document
 
 		belongs_to :user
-    embeds_many :items
+    embeds_many :versions
 
     field :name, type: String
     field :url, type: String
@@ -33,7 +33,7 @@ class Appcast
     index({ name: 1 }, { unique: true })
 end
 
-class Item
+class Version
 		include Mongoid::Document
 
 		embedded_in :appcast
@@ -176,6 +176,7 @@ class App < Sinatra::Base
 	end
 
 	get '/' do
+		redirect '/dashboard' if user_id
 		haml :index
 	end
 
@@ -272,11 +273,11 @@ class App < Sinatra::Base
 		Appcast.find(id).to_json
 	end
 
-	post '/appcasts/:id/items' do |id|
+	post '/appcasts/:id/verions' do |id|
 		content_type :json
 		appcast = Appcast.find(id)
-		version = Item.new(params.slice(Item.fields.keys))
-		appcast.items.push(version)
+		version = Version.new(params.slice(Version.fields.keys))
+		appcast.versions.push(version)
 		if (!params[:file][:filename].nil? and !params[:file][:tempfile].nil?)
 			url = upload(appcast._id.to_s + "/" + version._id.to_s + File.extname(params[:file][:filename]), params['file'][:tempfile])
 			version.url = url
@@ -286,20 +287,25 @@ class App < Sinatra::Base
 		version.to_json
 	end
 
-	put '/appcasts/:appcastId/items/:itemId' do |appcastId, itemId|
+	get '/appcasts/:appcastId/versions/:versionId' do |appcastId, versionId|
+		content_type :json
+		Version.find(versionId).to_json
+	end
+
+	put '/appcasts/:appcastId/versions/:versionId' do |appcastId, versionId|
 		content_type :json
 		data = JSON.parse(request.body.read)
-		version = Appcast.items.find(itemId)
+		version = Appcast.versions.find(versionId)
 		if version.update_attributes(data)
-			Appcast.items.find(id).to_json
+			Appcast.versions.find(id).to_json
 		else
 			version.to_json
 		end
 	end
 
-	get '/appcasts/:id/items' do |id|
+	get '/appcasts/:id/versions' do |id|
 		content_type :json
-		Appcast.find(id).items.to_json
+		Appcast.find(id).versions.to_json
 	end
 
 	get '/appcasts/:id/feed' do |id|
