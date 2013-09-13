@@ -69,13 +69,23 @@ var VersionsCtrl = ['$scope', '$log', 'Appcasts', function VersionsCtrl($scope, 
 	};
 }];
 
-var EditVersionCtrl = ['$scope', '$log', '$http', '$routeParams', function($scope, $log, $http, $routeParams) {
+var EditVersionCtrl = ['$scope', '$log', '$http', '$routeParams', '$location', function($scope, $log, $http, $routeParams, $location) {
 	$scope.$log = $log;
 	$http.get('/appcasts/' + $scope.appcastId + "/versions/" + $routeParams.versionId).success(function(data) {
 		$scope.remote = data;
 		$scope.version = angular.copy($scope.remote);
 		$scope.isClean = function() {
 			return angular.equals($scope.remote, $scope.version);
+		};
+		$scope.save = function() {
+			$http.put('/appcasts/' + $scope.appcastId + "/versions/" + $scope.remote._id, $scope.version).success(function(result) {
+				$location.path("/");
+			});
+		};
+		$scope.destroy = function() {
+			$http.delete('/appcasts/' + $scope.appcastId + "/versions/" + $scope.remote._id).success(function(result) {
+				$location.path("/");
+			});
 		};
 	});
 }];

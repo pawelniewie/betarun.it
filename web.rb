@@ -43,6 +43,7 @@ class Version
 		field :minimumSystemVersion, type: String
 		field :pubDate, type: Time, default: -> { Time.now }
 		field :url, type: String
+		field :path, type: String
 		field :versionNumber, type: Integer
 		field :versionString, type: String
 		field :size, type: Integer
@@ -167,6 +168,14 @@ class App < Sinatra::Base
 	    obj = s3.buckets[ENV['S3_BUCKET_NAME']].objects[filename].write(file)
 	    return obj.public_url({:secure => true})
 	  end
+
+	  def destroy(filename)
+	    s3 = AWS::S3.new(
+	      :access_key_id     => ENV['AWS_ACCESS_KEY_ID'],
+	      :secret_access_key => ENV['AWS_SECRET_ACCESS_KEY']
+	    )
+	    s3.buckets[ENV['S3_BUCKET_NAME']].objects[filename].delete()
+	  end
 	end
 
 	# the facebook session expired! reset ours and restart the process
@@ -279,7 +288,8 @@ class App < Sinatra::Base
 		version = Version.new(params.slice(Version.fields.keys))
 		appcast.versions.push(version)
 		if (!params[:file][:filename].nil? and !params[:file][:tempfile].nil?)
-			url = upload(appcast._id.to_s + "/" + version._id.to_s + File.extname(params[:file][:filename]), params['file'][:tempfile])
+			version.path = appcast._id.to_s + "/" + version._id.to_s + File.extname(params[:file][:filename])
+			url = upload(version.path, params['file'][:tempfile])
 			version.url = url
 			version.size = File.size(params[:file][:tempfile])
 			version.save()
@@ -290,6 +300,15 @@ class App < Sinatra::Base
 	get '/appcasts/:appcastId/versions/:versionId' do |appcastId, versionId|
 		content_type :json
 		Appcast.find(appcastId).versions.find(versionId).to_json
+	end
+
+	delete '/appcasts/:appcastId/versions/:versionId' do |appcastId, versionId|
+		content_type :json
+		appcast = Appcast.find(appcastId)
+		version = appcast.versions.find(versionId)
+		destroy(version.path) if version.path
+		appcast.versions.delete(version)
+		true.to_json
 	end
 
 	put '/appcasts/:appcastId/versions/:versionId' do |appcastId, versionId|
