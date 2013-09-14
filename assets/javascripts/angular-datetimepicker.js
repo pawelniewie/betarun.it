@@ -44,6 +44,7 @@ angular.module('$strap.directives').directive('bsDatetimepicker', [
         var options = angular.extend({ autoclose: true }, $strapConfig.datetimepicker || {}), type = attrs.dateType || options.type || 'date';
         angular.forEach([
           'format',
+          'formatType',
           'weekStart',
           'calendarWeeks',
           'startDate',
@@ -64,10 +65,14 @@ angular.module('$strap.directives').directive('bsDatetimepicker', [
           if (angular.isDefined(attrs[key]))
             options[key] = attrs[key];
         });
-        var language = options.language || 'en', readFormat = attrs.dateFormat || options.format || $.fn.datetimepicker.dates[language] && $.fn.datetimepicker.dates[language].format || 'mm/dd/yyyy', format = isAppleTouch ? 'yyyy-mm-dd' : readFormat, dateFormatRegexp = regexpForDateFormat(format, language);
+        var language = options.language || 'en',
+          format = isAppleTouch ? 'yyyy-mm-dd hh:mm' : (attrs.dateFormat || options.format || $.fn.datetimepicker.dates[language] && $.fn.datetimepicker.dates[language].format || 'mm/dd/yyyy hh:mm'),
+          formatType = attrs.formatType || options.formatType || 'standard',
+          linkFormat = attrs.linkFormat || options.format,
+          dateFormatRegexp = regexpForDateFormat(format, language);
         if (controller) {
           controller.$formatters.unshift(function (modelValue) {
-            return type === 'date' && angular.isString(modelValue) && modelValue ? $.fn.datetimepicker.DPGlobal.parseDate(modelValue, $.fn.datetimepicker.DPGlobal.parseFormat(readFormat), language) : modelValue;
+            return type === 'date' && angular.isString(modelValue) && modelValue ? $.fn.datetimepicker.DPGlobal.parseDate(modelValue, $.fn.datetimepicker.DPGlobal.parseFormat(linkFormat, formatType), language) : modelValue;
           });
           controller.$parsers.unshift(function (viewValue) {
             if (!viewValue) {
@@ -107,6 +112,7 @@ angular.module('$strap.directives').directive('bsDatetimepicker', [
               });
             });
           }
+          element.addClass("date");
           element.datetimepicker(angular.extend(options, {
             format: format,
             language: language
