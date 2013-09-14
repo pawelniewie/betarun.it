@@ -319,7 +319,7 @@ class App < Sinatra::Base
 		Appcast.find(id).versions.to_json
 	end
 
-	get '/appcasts/:id/feed' do |id|
+	get '/feed/:id' do |id|
 		content_type :xml
 		erb :appcast, :locals => { :appcast => Appcast.find(id) }
 	end

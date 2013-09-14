@@ -5,15 +5,15 @@
 		<link><%= appcast.url %></link>
 		<description><%= appcast.description %></description>
 		<language><%= appcast.language %></language>
-		<% for item in appcast.items %>
+		<% for version in appcast.versions %>
 		<item>
-			<title><%= item.title %></title>
+			<title><%= version.title %></title>
 			<description><![CDATA[
-				<%= item.description %>
+				<%= version.description %>
 				]]></description>
-			<sparkle:minimumSystemVersion><%= item.minimumSystemVersion %></sparkle:minimumSystemVersion>
-			<pubDate><% item.pubDate %></pubDate>
-			<enclosure url="<%= item.url %>" sparkle:version="<%= item.versionNumber %>" sparkle:shortVersionString="<%= item.versionString %>" length="<%= item.size %>" type="application/octet-stream"/>
+			<sparkle:minimumSystemVersion><%= version.minimumSystemVersion %></sparkle:minimumSystemVersion>
+			<pubDate><% version.pubDate %></pubDate>
+			<enclosure url="<%= version.url %>" sparkle:version="<%= version.versionNumber %>" sparkle:shortVersionString="<%= version.versionString %>" length="<%= version.size %>" type="application/octet-stream"/>
 		</item>
 		<% end %>
 	</channel>
