@@ -28,8 +28,7 @@
 			.desciption {{version.description | default: "No description available."}}
 			.pull-left
 				Published
-				%time.pubDate.relative {{version.pubDate}}
-				%span.draft {{version.draft}}
+				%time.pubDate.relative{ "datetime" => "{{version.pubDate}}" }
 			.pull-right
 				%span.size {{version.size | bytes}}
 				%a.url{:href => "{{version.url}}"} Download

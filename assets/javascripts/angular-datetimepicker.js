@@ -108,7 +108,13 @@ angular.module('$strap.directives').directive('bsDatetimepicker', [
           if (controller) {
             element.on('changeDate', function (ev) {
               scope.$apply(function () {
-                controller.$setViewValue(type === 'string' ? element.val() : ev.date);
+                if (type === 'string') {
+                  controller.$setViewValue(element.val());
+                } else {
+                  var fixUtc = new Date(ev.date.valueOf());
+                  fixUtc.setHours(fixUtc.getUTCHours()); // fix for datetimepicker which
+                  controller.$setViewValue(fixUtc);
+                }
               });
             });
           }
