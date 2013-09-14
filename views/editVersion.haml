@@ -5,7 +5,11 @@
 
   .form-group{"ng-class" => "{'has-error': version.name.$invalid}"}
     %label Published on
-    %input{:name => "pubDate", :class => "form-control", "ng-model" => "version.pubDate", :required => "", :type => "text"}/
+    .input-group{"data-link-format" => "yyyy-mm-ddThh:ii:ssZ", "data-date-format" => "dd MM yyyy - HH:ii p", "data-link-field" => "pubDate", "bs-datetimepicker" => "", "data-autoclose" => "true", "data-today-btn" => "true", "data-show-meridian" => "true", "data-today-highlight" => "true"}
+      %input{:class => "form-control", :required => "", :type => "text", :readonly => ""}/
+      %span.input-group-addon
+        %span.glyphicon.glyphicon-th
+    %input{:type => "hidden", :id => "pubDate", :name => "pubDate", "ng-model" => "version.pubDate"}
 
   .form-group
     %label Description

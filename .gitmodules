@@ -4,3 +4,6 @@
 [submodule "vendor/ng-time-relative"]
 	path = vendor/ng-time-relative
 	url = https://github.com/ehd/ng-time-relative
+[submodule "vendor/bootstrap-datatimepicker"]
+	path = vendor/bootstrap-datatimepicker
+	url = https://github.com/CuGBabyBeaR/bootstrap-datetimepicker.git

@@ -82,6 +82,11 @@ class App < Sinatra::Base
     	assets.append_path dir
   	end
 
+  	%w{vendor/bootstrap-datatimepicker}.each do |dir|
+  		assets.append_path "#{dir}/css"
+  		assets.append_path "#{dir}/js"
+  	end
+
     Sprockets::Helpers.configure do |config|
       config.environment = assets
       config.prefix      = assets_prefix

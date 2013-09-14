@@ -5,7 +5,9 @@
 //= require directive
 //= require "angular-filters"
 //= require "ng-time-relative"
-var kfz = angular.module('appcasts', ['drag-drop-upload', 'frapontillo.ex.filters', 'timeRelative']).
+//= require "bootstrap-datetimepicker"
+//= require "angular-datetimepicker"
+var kfz = angular.module('appcasts', ['drag-drop-upload', 'frapontillo.ex.filters', 'timeRelative', '$strap.directives']).
 factory('Appcasts', ['$http', function($http) {
 	return {
 		appcast: function(appcastId) {
