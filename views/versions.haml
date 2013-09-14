@@ -11,7 +11,7 @@
 %div{:action => "appcastUrl", "clear-on-complete" => "true", "drag-drop-upload" => "", "on-complete" => "uploadComplete(e, data)", "on-error" => "uploadError(e, data)", "on-progress" => "uploadProgress(progress, e, data)"}
 
 .versions
-	.version.panel{ "ng-repeat" => "version in appcast.versions", "ng-class" => "{'panel-default' : !version.draft, 'panel-danger' : version.draft}"}
+	.version.panel{ "ng-repeat" => "version in appcast.versions | orderBy:'versionNumber':true", "ng-class" => "{'panel-default' : !version.draft, 'panel-danger' : version.draft}"}
 		.panel-heading
 			.pull-left
 				.title {{version.title}}
