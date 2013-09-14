@@ -83,6 +83,9 @@ var VersionsCtrl = ['$scope', '$log', '$http', '$location', 'Appcasts', function
 var EditVersionCtrl = ['$scope', '$log', '$http', '$routeParams', '$location', 'Appcasts', function($scope, $log, $http, $routeParams, $location, Appcasts) {
 	$scope.$log = $log;
 	$http.get(Appcasts.version($scope.appcastId, $routeParams.versionId)).success(function(data) {
+		if (data.pubDate) {
+			data.pubDate = moment(data.pubDate).toDate();
+		}
 		$scope.remote = data;
 		$scope.version = angular.copy($scope.remote);
 		$scope.isClean = function() {
