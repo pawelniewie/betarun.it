@@ -1,40 +1,43 @@
 - content_for(:head) do
-	!= stylesheet_tag "dashboard"
+  != stylesheet_tag "dashboard"
 
 - content_for(:scripts) do
-	!= javascript_tag "dashboard"
-	:javascript
-		mixpanel.alias("#{user.email}")
+  != javascript_tag "dashboard"
+  :javascript
+    mixpanel.alias("#{user.email}")
 
 .container{"ng-controller" => "VersionsCtrl", "ng-init" => "init('" + appcast._id + "')"}
-	.header
-		%h3.text-muted=settings.appname
-	%hr/
-	.row
-		.col-md-8
-			%div{ "ng-view" => "" }
-		.col-md-4
-			.panel.panel-info
-				.panel-heading
-					%h3.panel-title Step by step instructions
-				.panel-body
-					%p
-						Hi, great to have you on board! To host you appcast all you need to do is follow this steps:
-					%ol
-						%li
-							Download and bundle this special version of
-							%a{:href => "http://github.com/pawelniewie/sparkle"} Sparkle
-						%li
-							Add it to your project
-						%li
-							Add this little helper to you build
-						%li
-							Before releasing run git tag -a version
-						%li
-							Build for Archiving
-						%li
-							Export the app (sign in with a Developer certificate)
-						%li
-							Run appcast upload with the app file
-						%li
-							Your appcast was updated and clients are getting the new version!
+  .header
+    %ul.nav.nav-pills.pull-right
+      %li
+        %a{:href => "/auth/logout"} Log out
+    %h3.text-muted=settings.appname
+  %hr/
+  .row
+    .col-md-8
+      %div{ "ng-view" => "" }
+    .col-md-4
+      .panel.panel-info
+        .panel-heading
+          %h3.panel-title Step by step instructions
+        .panel-body
+          %p
+            Hi, great to have you on board! To host you appcast all you need to do is follow this steps:
+          %ol
+            %li
+              Download and bundle this special version of
+              %a{:href => "http://github.com/pawelniewie/sparkle"} Sparkle
+            %li
+              Add it to your project
+            %li
+              Add this little helper to you build
+            %li
+              Before releasing run git tag -a version
+            %li
+              Build for Archiving
+            %li
+              Export the app (sign in with a Developer certificate)
+            %li
+              Run appcast upload with the app file
+            %li
+              Your appcast was updated and clients are getting the new version!

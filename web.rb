@@ -253,6 +253,11 @@ class App < Sinatra::Base
 	  redirect '/dashboard'
 	end
 
+	get '/auth/logout' do
+		session.delete(:user_id)
+		redirect '/'
+	end
+
 	['/appcasts/*', '/appcasts'].each do |path|
 		before path do
 		  halt 401, "Not authorized\n" if not user_id
