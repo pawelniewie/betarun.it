@@ -48,6 +48,7 @@ class Version
 		field :versionString, type: String
 		field :size, type: Integer
 		field :draft, type: Boolean, default: true
+		field :downloads, type: Integer, default: 0
 end
 
 class App < Sinatra::Base
@@ -334,8 +335,9 @@ class App < Sinatra::Base
 		erb :appcast, :locals => { :appcast => Appcast.find(id) }
 	end
 
-	get '/appcasts/:id/download/latest' do |id|
-		content_type :xml
-		erb :appcast, :locals => { :appcast => Appcast.find(id) }
+	get '/download/:id' do |id|
+	end
+
+	get '/download/:id/:versionId' do |id, versionId|
 	end
 end

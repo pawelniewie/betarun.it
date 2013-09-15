@@ -1,13 +1,8 @@
-//= require assets/js/jquery.ui.widget
-//= require assets/js/jquery.knob
-//= require assets/js/jquery.iframe-transport
-//= require assets/js/jquery.fileupload
-//= require directive
 //= require "angular-filters"
 //= require "ng-time-relative"
 //= require "bootstrap-datetimepicker"
 //= require "angular-datetimepicker"
-var kfz = angular.module('appcasts', ['drag-drop-upload', 'frapontillo.ex.filters', 'timeRelative', '$strap.directives']).
+var kfz = angular.module('appcasts', ['frapontillo.ex.filters', 'timeRelative', '$strap.directives', 'blueimp.fileupload']).
 factory('Appcasts', ['$http', function($http) {
 	return {
 		appcast: function(appcastId) {
@@ -21,12 +16,50 @@ factory('Appcasts', ['$http', function($http) {
 		}
 	};
 }])
-.config(['$routeProvider', function($routeProvider) {
+.filter('bytes', function() {
+	return function(bytes, precision) {
+		if (isNaN(parseFloat(bytes)) || !isFinite(bytes)) return '-';
+		if (typeof precision === 'undefined') precision = 1;
+		var units = ['bytes', 'kB', 'MB', 'GB', 'TB', 'PB'],
+			number = Math.floor(Math.log(bytes) / Math.log(1024));
+		return (bytes / Math.pow(1024, Math.floor(number))).toFixed(precision) +  ' ' + units[number];
+	};
+})
+.config(['$routeProvider', 'fileUploadProvider', function($routeProvider, fileUploadProvider) {
 	$routeProvider
 		.when('/', {controller: VersionsCtrl, templateUrl: '/partials/versions'})
 		.when('/edit/:versionId', {controller: EditVersionCtrl, templateUrl: '/partials/edit-version'})
 		.otherwise({ redirectTo: '/'});
-}]);
+}])
+.controller('FileDestroyController', ['$scope', '$http', function ($scope, $http) {
+    var file = $scope.file,
+        state;
+    if (file.url) {
+        file.$state = function () {
+            return state;
+        };
+        file.$destroy = function () {
+            state = 'pending';
+            return $http({
+                url: file.deleteUrl,
+                method: file.deleteType
+            }).then(
+                function () {
+                    state = 'resolved';
+                    $scope.clear(file);
+                },
+                function () {
+                    state = 'rejected';
+                }
+            );
+        };
+    } else if (!file.$cancel && !file._index) {
+        file.$cancel = function () {
+            $scope.clear(file);
+        };
+    }
+  }
+]);
 
 var VersionsCtrl = ['$scope', '$log', '$http', '$location', 'Appcasts', function VersionsCtrl($scope, $log, $http, $location, Appcasts) {
 	$scope.$log = $log;

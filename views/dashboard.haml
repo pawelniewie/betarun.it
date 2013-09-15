@@ -1,8 +1,25 @@
 - content_for(:head) do
   != stylesheet_tag "dashboard"
 
+  %link{:href => "//cdn.jsdelivr.net/jquery.fileupload/8.8.2/css/jquery.fileupload-ui.css", :rel => "stylesheet", :type => "text/css"}/
+
 - content_for(:scripts) do
+  %script{:src => "//cdn.jsdelivr.net/jquery.ui/1.9.2/jquery-ui.custom.min.js"}
+  / The Iframe Transport is required for browsers without support for XHR file uploads
+  %script{:src => "//cdn.jsdelivr.net/jquery.fileupload/8.8.2/js/jquery.iframe-transport.js"}
+  / The basic File Upload plugin
+  %script{:src => "//cdn.jsdelivr.net/jquery.fileupload/8.8.2/js/jquery.fileupload.js"}
+  / The basic File Upload plugin
+  %script{:src => "//cdn.jsdelivr.net/jquery.fileupload/8.8.2/js/jquery.fileupload-ui.js"}
+  / The File Upload processing plugin
+  %script{:src => "//cdn.jsdelivr.net/jquery.fileupload/8.8.2/js/jquery.fileupload-process.js"}
+  / The File Upload validation plugin
+  %script{:src => "//cdn.jsdelivr.net/jquery.fileupload/8.8.2/js/jquery.fileupload-validate.js"}
+  / The File Upload Angular JS module
+  %script{:src => "//cdn.jsdelivr.net/jquery.fileupload/8.8.2/js/jquery.fileupload-angular.js"}
+
   != javascript_tag "dashboard"
+
   :javascript
     mixpanel.alias("#{user.email}")
 

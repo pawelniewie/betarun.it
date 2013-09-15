@@ -10,6 +10,36 @@
 	}
 }
 
-.file-upload {
+#fileupload {
 	margin-top: 15px;
+	border-radius: 5px;
+	width: 100%;
+	border: 1px dashed #ccc;
+
+	.fileupload-buttonbar {
+		text-align: center;
+		margin-top: 25px;
+	}
+
+	.hint {
+		margin-bottom: 10px;
+	}
+
+	.fade {
+		padding-left: 10px;
+		padding-right: 10px;
+	}
+
+	.table.files {
+		margin-bottom: 0;
+
+		td.col-file {
+			width: 100%;
+		}
+
+		td.col-size,
+		td.col-buttons {
+			white-space: nowrap;
+		}
+	}
 }

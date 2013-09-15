@@ -1,37 +1,73 @@
 .appcast
-	%form.form-inline{:role => "form"}
-		.form-group
-			.input-group
-				%span.input-group-addon AppCast Name
-				%input.form-control{:type => "text", "ng-model" => "appcast.name", "ng-change" => "saveAppcast()"}
-				%span.input-group-addon
-					%a{:href => "/feed/{{appcastId}}"}
-						%i.icon-rss
+  %form.form-inline{:role => "form"}
+    .form-group
+      .input-group
+        %span.input-group-addon AppCast Name
+        %input.form-control{:type => "text", "ng-model" => "appcast.name", "ng-change" => "saveAppcast()"}
+        %span.input-group-addon
+          %a{:href => "/feed/{{appcastId}}"}
+            %i.icon-rss
 
-%div{:action => "appcastUrl", "clear-on-complete" => "true", "drag-drop-upload" => "", "on-complete" => "uploadComplete(e, data)", "on-error" => "uploadError(e, data)", "on-progress" => "uploadProgress(progress, e, data)"}
+%form#fileupload{:action => "{{appcastUrl}}", "data-file-upload" => "options", "data-ng-class" => "{'fileupload-processing': processing() || loadingFiles}", :enctype => "multipart/form-data", :method => "POST", "data-accept-file-types" => "/(\.|\/)(zip)$/i", "data-auto-upload" => "true"}
+  / The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload
+  .fileupload-buttonbar
+    / The fileinput-button span is used to style the file input field as button
+    .btn.btn-success.fileinput-button{"ng-class" => "{disabled: disabled}"}
+      %i.glyphicon.glyphicon-plus
+      %span Add version...
+      %input{:multiple => "", :name => "files[]", "ng-disabled" => "disabled", :type => "file"}/
+    .hint{"ng-hide" => "active()"} Upload a zipped app to create a version. You can drop it here too.
+    / The loading indicator is shown during file processing
+    .fileupload-loading
+    / The global progress information
+    .fade{"data-ng-class" => "{in: active()}", "ng-show" => "active()"}
+      / The global progress bar
+      .progress.progress-striped.active{"data-file-upload-progress" => "progress()"}
+        .progress-bar.progress-bar-success{"data-ng-style" => "{width: num + '%'}"}
+      / The extended global progress information
+      .progress-extended &nbsp;
+  / The table listing the files available for upload/download
+  %table.table.table-striped.files.ng-cloak
+    %tr{"data-ng-repeat" => "file in queue"}
+      %td.col-file
+        %span.filename {{file.name}}
+        %div{"data-ng-show" => "file.error"}
+          %span.label.label-danger Error
+          {{file.error}}
+      %td.col-size
+        %p.size {{file.size | formatFileSize}}
+        .progress.progress-striped.active.fade{"data-file-upload-progress" => "file.$progress()", "data-ng-class" => "{pending: 'in'}[file.$state()]"}
+          .progress-bar.progress-bar-success{"data-ng-style" => "{width: num + '%'}"}
+      %td.col-buttons
+        %button.btn.btn-warning.cancel{"data-ng-click" => "file.$cancel()", "data-ng-hide" => "!file.$cancel", :type => "button"}
+          %i.glyphicon.glyphicon-ban-circle
+          %span Cancel
+        %button.btn.btn-danger.destroy{"data-ng-click" => "file.$destroy()", "data-ng-controller" => "FileDestroyController", "data-ng-hide" => "!file.$destroy", :type => "button"}
+          %i.glyphicon.glyphicon-trash
+          %span Delete
 
 .versions
-	.version.panel{ "ng-repeat" => "version in appcast.versions | orderBy:'versionNumber':true", "ng-class" => "{'panel-default' : !version.draft, 'panel-danger' : version.draft}"}
-		.panel-heading
-			.pull-left
-				.title {{version.title}}
-				.versionString {{version.versionString}}
-				.versionNumber {{version.versionNumber}}
-			.pull-right
-				.btn-toolbar
-					.btn-group.btn-group-xs
-						%button.btn.btn-default{ "ng-click" => "editVersion(version._id)" } Edit
-						%button.btn.btn-default{ "ng-click" => "publishVersion(version._id, !appcast.draft)", "ng-show" => "version.draft" } Publish
-						%button.btn.btn-default{ "ng-click" => "publishVersion(version._id, appcast.draft)", "ng-hide" => "version.draft" } Unpublish
-			.clearfix
-		.panel-body
-			.desciption {{version.description | default: "No description available."}}
-			.pull-left
-				Published
-				%time.pubDate.relative{ "datetime" => "{{version.pubDate}}" }
-			.pull-right
-				%span.size {{version.size | bytes}}
-				%a.url{:href => "{{version.url}}"} Download
-			.clearfix
-	.empty.alert.alert-info{ "ng-show" => "!appcast.versions || appcast.versions.length == 0"}
-		There are currently no versions defined for this appcast. Drag and drop your app here to add a new version.
+  .version.panel{ "ng-repeat" => "version in appcast.versions | orderBy:'versionNumber':true", "ng-class" => "{'panel-default' : !version.draft, 'panel-danger' : version.draft}"}
+    .panel-heading
+      .pull-left
+        .title {{version.title}}
+        .versionString {{version.versionString}}
+        .versionNumber {{version.versionNumber}}
+      .pull-right
+        .btn-toolbar
+          .btn-group.btn-group-xs
+            %button.btn.btn-default{ "ng-click" => "editVersion(version._id)" } Edit
+            %button.btn.btn-default{ "ng-click" => "publishVersion(version._id, !appcast.draft)", "ng-show" => "version.draft" } Publish
+            %button.btn.btn-default{ "ng-click" => "publishVersion(version._id, appcast.draft)", "ng-hide" => "version.draft" } Unpublish
+      .clearfix
+    .panel-body
+      .desciption {{version.description | default: "No description available."}}
+      .pull-left
+        Published
+        %time.pubDate.relative{ "datetime" => "{{version.pubDate}}" }
+      .pull-right
+        %span.size {{version.size | bytes}}
+        %a.url{:href => "{{version.url}}"} Download
+      .clearfix
+  .empty.alert.alert-info{ "ng-show" => "!appcast.versions || appcast.versions.length == 0"}
+    There are currently no versions defined for this appcast. Drag and drop your app here to add a new version.
