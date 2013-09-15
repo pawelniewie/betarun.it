@@ -79,7 +79,7 @@ class App < Sinatra::Base
       assets.append_path "assets/#{type}"
     end
 
-    %w{vendor/angularjs-drag-drop-upload vendor/bower_components/angular-filters/build vendor/ng-time-relative/dist}.each do |dir|
+    %w{vendor/bower_components/angular-filters/build vendor/ng-time-relative/dist}.each do |dir|
     	assets.append_path dir
   	end
 
@@ -291,17 +291,32 @@ class App < Sinatra::Base
 	end
 
 	post '/appcasts/:id/versions' do |id|
+		versions = []
 		appcast = Appcast.find(id)
-		version = Version.new(params.slice(Version.fields.keys))
-		appcast.versions.push(version)
-		if (!params[:file][:filename].nil? and !params[:file][:tempfile].nil?)
-			version.path = appcast._id.to_s + "/" + version._id.to_s + File.extname(params[:file][:filename])
-			url = upload(version.path, params['file'][:tempfile])
-			version.url = url
-			version.size = File.size(params[:file][:tempfile])
-			version.save()
+		if params[:files].kind_of?(Array)
+			params[:files].each do |file|
+				if (!file[:filename].nil? and !file[:tempfile].nil?)
+					version = Version.new()
+					begin
+						# first make sure we uploaded the file to S3
+						path = appcast._id.to_s + "/" + version._id.to_s + File.extname(file[:filename])
+						url = upload(path, file[:tempfile])
+						size = File.size(file[:tempfile])
+
+						# then update details
+						appcast.versions.push(version)
+						version.path = path
+						version.url = url
+						version.size = size
+						version.save()
+						versions.push(version)
+					rescue
+						appcast.versions.delete(version)
+					end
+				end
+			end
 		end
-		version.to_json
+		versions.to_json
 	end
 
 	get '/appcasts/:appcastId/versions/:versionId' do |appcastId, versionId|
