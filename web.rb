@@ -299,6 +299,7 @@ class App < Sinatra::Base
 					version = Version.new()
 					begin
 						# first make sure we uploaded the file to S3
+						# if there's an error storing the version it will leak S3 object, don't care now
 						path = appcast._id.to_s + "/" + version._id.to_s + File.extname(file[:filename])
 						url = upload(path, file[:tempfile])
 						size = File.size(file[:tempfile])

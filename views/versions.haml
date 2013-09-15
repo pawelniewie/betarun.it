@@ -42,9 +42,6 @@
         %button.btn.btn-warning.cancel{"data-ng-click" => "file.$cancel()", "data-ng-hide" => "!file.$cancel", :type => "button"}
           %i.glyphicon.glyphicon-ban-circle
           %span Cancel
-        %button.btn.btn-danger.destroy{"data-ng-click" => "file.$destroy()", "data-ng-controller" => "FileDestroyController", "data-ng-hide" => "!file.$destroy", :type => "button"}
-          %i.glyphicon.glyphicon-trash
-          %span Delete
 
 .versions
   .version.panel{ "ng-repeat" => "version in appcast.versions | orderBy:'versionNumber':true", "ng-class" => "{'panel-default' : !version.draft, 'panel-danger' : version.draft}"}

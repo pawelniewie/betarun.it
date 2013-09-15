@@ -30,36 +30,7 @@ factory('Appcasts', ['$http', function($http) {
 		.when('/', {controller: VersionsCtrl, templateUrl: '/partials/versions'})
 		.when('/edit/:versionId', {controller: EditVersionCtrl, templateUrl: '/partials/edit-version'})
 		.otherwise({ redirectTo: '/'});
-}])
-.controller('FileDestroyController', ['$scope', '$http', function ($scope, $http) {
-    var file = $scope.file,
-        state;
-    if (file.url) {
-        file.$state = function () {
-            return state;
-        };
-        file.$destroy = function () {
-            state = 'pending';
-            return $http({
-                url: file.deleteUrl,
-                method: file.deleteType
-            }).then(
-                function () {
-                    state = 'resolved';
-                    $scope.clear(file);
-                },
-                function () {
-                    state = 'rejected';
-                }
-            );
-        };
-    } else if (!file.$cancel && !file._index) {
-        file.$cancel = function () {
-            $scope.clear(file);
-        };
-    }
-  }
-]);
+}]);
 
 var VersionsCtrl = ['$scope', '$log', '$http', '$location', 'Appcasts', function VersionsCtrl($scope, $log, $http, $location, Appcasts) {
 	$scope.$log = $log;
@@ -102,6 +73,10 @@ var VersionsCtrl = ['$scope', '$log', '$http', '$location', 'Appcasts', function
 		$scope.appcastUrl = Appcasts.versions(appcastId);
 		$scope.loadAppcast();
 	};
+
+	$scope.$on("fileuploaddone", function(e, data) {
+		$scope.loadAppcast();
+	});
 }];
 
 var EditVersionCtrl = ['$scope', '$log', '$http', '$routeParams', '$location', 'Appcasts', function($scope, $log, $http, $routeParams, $location, Appcasts) {
