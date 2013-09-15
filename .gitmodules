@@ -1,6 +1,3 @@
-[submodule "vendor/angularjs-drag-drop-upload"]
-	path = vendor/angularjs-drag-drop-upload
-	url = https://github.com/pawelniewie/angularjs-drag-drop-upload.git
 [submodule "vendor/ng-time-relative"]
 	path = vendor/ng-time-relative
 	url = https://github.com/ehd/ng-time-relative
