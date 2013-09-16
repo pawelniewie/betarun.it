@@ -30,6 +30,35 @@ factory('Appcasts', ['$http', function($http) {
 		.when('/', {controller: VersionsCtrl, templateUrl: '/partials/versions'})
 		.when('/edit/:versionId', {controller: EditVersionCtrl, templateUrl: '/partials/edit-version'})
 		.otherwise({ redirectTo: '/'});
+}])
+.controller('FileDestroyController', ['$rootScope', '$scope', '$http', function ($rootScope, $scope, $http) {
+    var file = $scope.file,
+        state;
+    if (file.url) {
+        file.$state = function () {
+            return state;
+        };
+        file.$destroy = function () {
+            state = 'pending';
+            return $http({
+                url: file.deleteUrl,
+                method: file.deleteType
+            }).then(
+                function () {
+                    state = 'resolved';
+                    $scope.clear(file);
+                    $rootScope.$broadcast('fileuploaddeleted');
+                },
+                function () {
+                    state = 'rejected';
+                }
+            );
+        };
+    } else if (!file.$cancel && !file._index) {
+        file.$cancel = function () {
+            $scope.clear(file);
+        };
+    }
 }]);
 
 var VersionsCtrl = ['$scope', '$log', '$http', '$location', 'Appcasts', function VersionsCtrl($scope, $log, $http, $location, Appcasts) {
@@ -75,6 +104,10 @@ var VersionsCtrl = ['$scope', '$log', '$http', '$location', 'Appcasts', function
 	};
 
 	$scope.$on("fileuploaddone", function(e, data) {
+		$scope.loadAppcast();
+	});
+
+	$scope.$on("fileuploaddeleted", function(e, data) {
 		$scope.loadAppcast();
 	});
 }];

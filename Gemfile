@@ -18,6 +18,8 @@ gem 'sprockets-sass'
 gem "yui-compressor"
 gem "closure-compiler"
 gem "puma"
+gem "rubyzip"
+gem "CFPropertyList"
 
 group :development do
 	gem 'sinatra-reloader'

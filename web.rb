@@ -2,6 +2,8 @@ require "bundler"
 Bundler.setup(:default)
 Bundler.require
 
+require "./zipreader"
+
 Mongoid.load!("mongoid.yml")
 
 class User
@@ -74,6 +76,10 @@ class App < Sinatra::Base
 
 	  set :public_dir, File.dirname(__FILE__) + '/public'
 	  set :assets, Sprockets::Environment.new
+
+	  Zip.setup do |c|
+	    c.unicode_names = true
+	  end
 
 	  %w{javascripts stylesheets images}.each do |type|
       assets.append_path "assets/#{type}"
@@ -296,6 +302,8 @@ class App < Sinatra::Base
 		if params[:files].kind_of?(Array)
 			params[:files].each do |file|
 				if (!file[:filename].nil? and !file[:tempfile].nil?)
+					info = InfoFile::get_info_from_zip(file[:tempfile])
+
 					version = Version.new()
 					begin
 						# first make sure we uploaded the file to S3
@@ -310,14 +318,19 @@ class App < Sinatra::Base
 						version.url = url
 						version.size = size
 						version.save()
-						versions.push(version)
+						versions.push({
+								name: file[:filename],
+								url: "#/edit/" + version._id,
+								deleteType: "DELETE",
+								deleteUrl: "/appcasts/" + appcast._id + "/versions/" + version._id
+							})
 					rescue
 						appcast.versions.delete(version)
 					end
 				end
 			end
 		end
-		versions.to_json
+		{ :files => versions }.to_json
 	end
 
 	get '/appcasts/:appcastId/versions/:versionId' do |appcastId, versionId|
