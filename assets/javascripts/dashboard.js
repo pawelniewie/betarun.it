@@ -3,6 +3,10 @@
 //= require "bootstrap-datetimepicker"
 //= require "angular-datetimepicker"
 //= require tinymce.min
+//= require plugins/link/plugin.min
+//= require plugins/image/plugin.min
+//= require plugins/autolink/plugin.min
+//= require plugins/autoresize/plugin.min
 //= require tinymce
 var kfz = angular.module('appcasts', ['frapontillo.ex.filters', 'timeRelative', '$strap.directives', 'blueimp.fileupload', 'ui.tinymce']).
 factory('Appcasts', ['$http', function($http) {
@@ -116,6 +120,12 @@ var VersionsCtrl = ['$scope', '$log', '$http', '$location', 'Appcasts', function
 
 var EditVersionCtrl = ['$scope', '$log', '$http', '$routeParams', '$location', 'Appcasts', function($scope, $log, $http, $routeParams, $location, Appcasts) {
 	$scope.$log = $log;
+
+	$scope.tinymceConfig = {
+		plugins: ["autolink", "link", "image", "autoresize"],
+		menubar: false
+	};
+
 	$http.get(Appcasts.version($scope.appcastId, $routeParams.versionId)).success(function(data) {
 		if (data.pubDate) {
 			data.pubDate = moment(data.pubDate).toDate();

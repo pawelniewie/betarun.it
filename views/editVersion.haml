@@ -12,7 +12,7 @@
 
   .form-group
     %label Description
-    %textarea{:name => "description", :class => "form-control", :rows => 5, "ng-model" => "version.description", "ui-tinymce" => ""}
+    %textarea{:name => "description", :class => "form-control", :rows => 5, "ng-model" => "version.description", "ui-tinymce" => "tinymceConfig"}
 
   %button.btn.btn-default{"ng-click" => "save()", "ng-disabled" => "isClean() || version.$invalid"} Save
   %button.btn.btn-danger{"ng-click" => "destroy()", "ng-show" => "version._id"} Delete
