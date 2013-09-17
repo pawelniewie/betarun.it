@@ -2,6 +2,8 @@
 //= require "ng-time-relative"
 //= require "bootstrap-datetimepicker"
 //= require "angular-datetimepicker"
+//= require tinymce.min
+//= require tinymce
 var kfz = angular.module('appcasts', ['frapontillo.ex.filters', 'timeRelative', '$strap.directives', 'blueimp.fileupload', 'ui.tinymce']).
 factory('Appcasts', ['$http', function($http) {
 	return {
