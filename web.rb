@@ -124,9 +124,9 @@ class App < Sinatra::Base
 
 	before do
 	  # HTTPS redirect
-	  if settings.environment == :production && request.scheme != 'https'
-	    redirect "https://#{request.env['HTTP_HOST']}"
-	  end
+	  # if settings.environment == :production && request.scheme != 'https'
+	    # redirect "https://#{request.env['HTTP_HOST']}"
+	  # end
 	end
 
 	helpers do
@@ -304,28 +304,52 @@ class App < Sinatra::Base
 				if (!file[:filename].nil? and !file[:tempfile].nil?)
 					info = InfoFile::get_info_from_zip(file[:tempfile])
 					if info
-						version = Version.new()
-						begin
-							# first make sure we uploaded the file to S3
-							# if there's an error storing the version it will leak S3 object, don't care now
-							path = appcast._id.to_s + "/" + version._id.to_s + File.extname(file[:filename])
-							url = upload(path, file[:tempfile])
-							size = File.size(file[:tempfile])
+						error = nil
 
-							# then update details
-							appcast.versions.push(version)
-							version.path = path
-							version.url = url
-							version.size = size
-							version.save()
+						if not info[:CFBundleVersion]
+							error = "CFBundleVersion is not set in Info.plist"
+						elsif not info[:CFBundleShortVersionString]
+							error = "CFBundleShortVersionString is not set in Info.plist"
+						elsif not info[:SUFeedURL]
+							error = "SUFeedURL is not set in Info.plist"
+						elsif info[:SUFeedURL].casecmp(ENV['BASE_URL'] + "/feed/" + appcast._id) != 0
+							error = "SUFeedURL points to a wrong address"
+						end
+
+						unless error
+							version = Version.new()
+							begin
+								# first make sure we uploaded the file to S3
+								# if there's an error storing the version it will leak S3 object, don't care now
+								path = appcast._id.to_s + "/" + version._id.to_s + File.extname(file[:filename])
+								url = upload(path, file[:tempfile])
+								size = File.size(file[:tempfile])
+
+								# then update details
+								appcast.versions.push(version)
+								version.title = "Please upgrade to version #{CFBundleShortVersionString}" % info
+								version.versionNumber = info[:CFBundleVersion]
+								version.versionString = info[:CFBundleShortVersionString]
+								version.minimumSystemVersion = info[:LSMinimumSystemVersion] unless info[:LSMinimumSystemVersion]
+								version.path = path
+								version.url = url
+								version.size = size
+
+								version.save()
+								versions.push({
+										name: file[:filename],
+										url: "#/edit/" + version._id,
+										deleteType: "DELETE",
+										deleteUrl: "/appcasts/" + appcast._id + "/versions/" + version._id
+									})
+							rescue
+								appcast.versions.delete(version)
+							end
+						else
 							versions.push({
 									name: file[:filename],
-									url: "#/edit/" + version._id,
-									deleteType: "DELETE",
-									deleteUrl: "/appcasts/" + appcast._id + "/versions/" + version._id
+									error: error
 								})
-						rescue
-							appcast.versions.delete(version)
 						end
 					else
 						versions.push({

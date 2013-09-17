@@ -10,6 +10,10 @@ unless ENV['COOKIE_SECRET']
 	abort("missing env var: please set COOKIE_SECRET")
 end
 
+unless ENV['BASE_URL']
+	abort("missing env var: please set BASE_URL")
+end
+
 use Rack::Session::Cookie, :secret => ENV['COOKIE_SECRET']
 
 map App.assets_prefix do
