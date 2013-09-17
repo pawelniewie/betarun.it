@@ -22,7 +22,6 @@
     "commit": "4bfab6e64c937a3154b031305a0ba6b350b5c728"
   },
   "_source": "git://github.com/frapontillo/angular-filters.git",
-  "_target": "~1.0.0",
-  "_originalSource": "angular-filters",
-  "_direct": true
+  "_target": "*",
+  "_originalSource": "angular-filters"
 }

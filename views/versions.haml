@@ -61,7 +61,7 @@
             %button.btn.btn-default{ "ng-click" => "publishVersion(version._id, appcast.draft)", "ng-hide" => "version.draft" } Unpublish
       .clearfix
     .panel-body
-      .desciption {{version.description | default: "No description available."}}
+      .desciption{ "ng-bind-html-unsafe" => "version.description | default: 'No description available.'" }
       .pull-left
         Published
         %time.pubDate.relative{ "datetime" => "{{version.pubDate}}" }

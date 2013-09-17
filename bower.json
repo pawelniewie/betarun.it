@@ -1,0 +1,12 @@
+{
+  "name": "betarun.it",
+  "version": "0.0.1",
+  "homepage": "http://betarun.it",
+  "dependencies": {
+    "angular-ui-tinymce": "latest",
+    "angular-filters": "latest"
+  },
+  "devDependencies": {
+    "angular-mocks": "~1.x"
+  }
+}

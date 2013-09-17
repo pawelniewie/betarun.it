@@ -85,8 +85,12 @@ class App < Sinatra::Base
       assets.append_path "assets/#{type}"
     end
 
-    %w{vendor/bower_components/angular-filters/build vendor/ng-time-relative/dist}.each do |dir|
-    	assets.append_path dir
+    %w{ng-time-relative/dist}.each do |dir|
+    	assets.append_path "vendor/#{dir}"
+  	end
+
+    %w{angular-filters/build angular-ui-tinymce/src tinymce}.each do |dir|
+    	assets.append_path "bower_components/#{dir}"
   	end
 
   	%w{vendor/bootstrap-datatimepicker}.each do |dir|
@@ -305,6 +309,7 @@ class App < Sinatra::Base
 					info = InfoFile::get_info_from_zip(file[:tempfile])
 					if info
 						error = nil
+						info = info.with_indifferent_access
 
 						if not info[:CFBundleVersion]
 							error = "CFBundleVersion is not set in Info.plist"

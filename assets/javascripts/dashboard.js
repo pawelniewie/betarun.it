@@ -2,7 +2,7 @@
 //= require "ng-time-relative"
 //= require "bootstrap-datetimepicker"
 //= require "angular-datetimepicker"
-var kfz = angular.module('appcasts', ['frapontillo.ex.filters', 'timeRelative', '$strap.directives', 'blueimp.fileupload']).
+var kfz = angular.module('appcasts', ['frapontillo.ex.filters', 'timeRelative', '$strap.directives', 'blueimp.fileupload', 'ui.tinymce']).
 factory('Appcasts', ['$http', function($http) {
 	return {
 		appcast: function(appcastId) {
