@@ -72,8 +72,7 @@ class App < Sinatra::Base
 	FACEBOOK_SCOPE = 'email,publish_actions,publish_stream'
 
 	configure do
-		set :appname, "AppCasts"
-
+		set :appname, ENV['APP_NAME']
 	  set :public_dir, File.dirname(__FILE__) + '/public'
 	  set :assets, Sprockets::Environment.new
 
