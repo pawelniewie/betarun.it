@@ -34,4 +34,6 @@ end
 # "CFBundleIdentifier"=>"com.pawelniewiadomski.Queued", "LSApplicationCategoryType"=>"public.app-category.social-networking",
 # "DTPlatformVersion"=>"GM", "DTXcodeBuild"=>"5A11314m", "CFBundleSignature"=>"????", "LSMinimumSystemVersion"=>"10.8",
 # "DTPlatformBuild"=>"5A11314m", "LSUIElement"=>true}
-puts InfoFile::get_info_from_zip("/Users/pawel/Development/Queued/Updates/binaries/Queued-0.7.zip")
+if __FILE__ == $0
+	puts InfoFile::get_info_from_zip("/Users/pawel/Development/Queued/Updates/binaries/Queued-0.7.zip")
+end
