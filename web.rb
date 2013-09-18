@@ -196,7 +196,7 @@ class App < Sinatra::Base
 	  end
 
 	  def version
-	  	@version ||= appcast.version.find(params[:version_id]) || halt(404)
+	  	@version ||= appcast.versions.find(params[:version_id]) || halt(404)
 	  end
 	end
 
@@ -387,7 +387,7 @@ class App < Sinatra::Base
 	put '/appcasts/:appcast_id/versions/:version_id' do
 		data = JSON.parse(request.body.read)
 		if version.update_attributes(data)
-			Appcast.find(appcastId).versions.find(versionId).to_json
+			Appcast.find(params[:appcast_id]).versions.find(params[:version_id]).to_json
 		else
 			version.to_json
 		end
@@ -399,15 +399,20 @@ class App < Sinatra::Base
 
 	get '/feed/:appcast_id' do
 		content_type :xml
-		erb :appcast, :locals => { :appcast => appcast }
+		erb :appcast, :locals => { :appcast => appcast, :versions => appcast.versions.where(:draft => false, :pubDate.lt => Time.now()).desc(:versionNumber) }
 	end
 
 	get '/download/:appcast_id' do
-		version = appcast.versions.where(:draft => false, :pubDate.lt => Time.now()).desc(:pubDate).first
+		version = appcast.versions.where(:draft => false, :pubDate.lt => Time.now()).desc(:versionNumber).first
 
-		redirect "/download/#{id}/#{version._id}"
+		halt 404 if not version
+
+		redirect "/download/#{appcast._id}/#{version._id}"
 	end
 
 	get '/download/:appcast_id/:version_id' do
+		version.downloads += 1
+		version.save
+		redirect version.url
 	end
 end

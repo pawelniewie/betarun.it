@@ -5,7 +5,7 @@
 		<link><%= appcast.url %></link>
 		<description><%= appcast.description %></description>
 		<language><%= appcast.language %></language>
-		<% for version in appcast.versions %>
+		<% for version in versions %>
 		<item>
 			<title><%= version.title %></title>
 			<description><![CDATA[
