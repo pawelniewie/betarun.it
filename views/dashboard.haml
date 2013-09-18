@@ -5,17 +5,10 @@
 
 - content_for(:scripts) do
   %script{:src => "//cdn.jsdelivr.net/jquery.ui/1.9.2/jquery-ui.custom.min.js"}
-  / The Iframe Transport is required for browsers without support for XHR file uploads
-  %script{:src => "//cdn.jsdelivr.net/jquery.fileupload/8.8.2/js/jquery.iframe-transport.js"}
-  / The basic File Upload plugin
   %script{:src => "//cdn.jsdelivr.net/jquery.fileupload/8.8.2/js/jquery.fileupload.js"}
-  / The basic File Upload plugin
   %script{:src => "//cdn.jsdelivr.net/jquery.fileupload/8.8.2/js/jquery.fileupload-ui.js"}
-  / The File Upload processing plugin
   %script{:src => "//cdn.jsdelivr.net/jquery.fileupload/8.8.2/js/jquery.fileupload-process.js"}
-  / The File Upload validation plugin
   %script{:src => "//cdn.jsdelivr.net/jquery.fileupload/8.8.2/js/jquery.fileupload-validate.js"}
-  / The File Upload Angular JS module
   %script{:src => "//cdn.jsdelivr.net/jquery.fileupload/8.8.2/js/jquery.fileupload-angular.js"}
 
   != javascript_tag "dashboard"
@@ -44,7 +37,7 @@
             Hi, great to have you on board! To host you appcast all you need to do is follow this steps:
           %ol
             %li
-              Download and bundle this special version of
+              Download and bundle
               %a{:href => "http://github.com/pawelniewie/sparkle"} Sparkle
             %li
               Add it to your project
@@ -57,6 +50,6 @@
             %li
               Export the app (sign in with a Developer certificate)
             %li
-              Run appcast upload with the app file
+              Upload with the app
             %li
               Your appcast was updated and clients are getting the new version!

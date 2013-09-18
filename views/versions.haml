@@ -5,7 +5,7 @@
         %span.input-group-addon AppCast Name
         %input.form-control{:type => "text", "ng-model" => "appcast.name", "ng-change" => "saveAppcast()"}
         %span.input-group-addon
-          %a{:href => "/feed/{{appcastId}}", :title => "Updates feed"}
+          %a{:href => "/feed/{{appcastId}}", :title => "RSS feed with updates"}
             %i.icon-rss
         %span.input-group-addon
           %a{:href => "/download/{{appcastId}}", :title => "Download the latest published version" }

@@ -1,5 +1,7 @@
-$: << "./vendor/install/ruby/2.0.0/gems/rubyzip-1.0.0/lib/"
-$: << "./vendor/install/ruby/2.0.0/gems/CFPropertyList-2.2.1/lib/"
+if __FILE__ == $0
+	$: << "./vendor/install/ruby/2.0.0/gems/rubyzip-1.0.0/lib/"
+	$: << "./vendor/install/ruby/2.0.0/gems/CFPropertyList-2.2.1/lib/"
+end
 
 require "zip"
 require "cfpropertylist"
