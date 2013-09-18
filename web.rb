@@ -190,6 +190,14 @@ class App < Sinatra::Base
 	    )
 	    s3.buckets[ENV['S3_BUCKET_NAME']].objects[filename].delete()
 	  end
+
+	  def appcast
+	  	@appcast ||= Appcast.find(params[:appcast_id]) || halt(404)
+	  end
+
+	  def version
+	  	@version ||= appcast.version.find(params[:version_id]) || halt(404)
+	  end
 	end
 
 	# the facebook session expired! reset ours and restart the process
@@ -232,7 +240,7 @@ class App < Sinatra::Base
 	  session[:access_token] = authenticator.get_access_token(params[:code])
 
 	  # Get base API Connection
-	  graph  = Koala::Facebook::API.new(access_token)
+	  graph = Koala::Facebook::API.new(access_token)
 
 	  profile = graph.get_object("me")
 	  if not profile
@@ -277,32 +285,30 @@ class App < Sinatra::Base
 		end
 	end
 
-	get '/appcasts' do
-		appcasts = Appcast.all
-		appcasts.to_json
-	end
+	# get '/appcasts' do
+		# appcasts = Appcast.all
+		# appcasts.to_json
+	# end
 
-	post '/appcasts' do
-		Appcast.create!(params.slice(Appcast.fields.keys)).to_json
-	end
+	# post '/appcasts' do
+		# Appcast.create!(params.slice(Appcast.fields.keys)).to_json
+	# end
 
-	put '/appcasts/:id' do |id|
+	put '/appcasts/:appcast_id' do
 		data = JSON.parse(request.body.read)
-		appcast = Appcast.find(id)
 		if appcast.update_attributes(data)
-			Appcast.find(id).to_json
+			Appcast.find(params[:appcast_id]).to_json
 		else
 			appcast.to_json
 		end
 	end
 
-	get '/appcasts/:id' do |id|
-		Appcast.find(id).to_json
+	get '/appcasts/:appcast_id' do
+		appcast.to_json
 	end
 
-	post '/appcasts/:id/versions' do |id|
+	post '/appcasts/:appcast_id/versions' do
 		versions = []
-		appcast = Appcast.find(id)
 		if params[:files].kind_of?(Array)
 			params[:files].each do |file|
 				if (!file[:filename].nil? and !file[:tempfile].nil?)
@@ -368,21 +374,18 @@ class App < Sinatra::Base
 		{ :files => versions }.to_json
 	end
 
-	get '/appcasts/:appcastId/versions/:versionId' do |appcastId, versionId|
-		Appcast.find(appcastId).versions.find(versionId).to_json
+	get '/appcasts/:appcast_id/versions/:version_id' do
+		version.to_json
 	end
 
-	delete '/appcasts/:appcastId/versions/:versionId' do |appcastId, versionId|
-		appcast = Appcast.find(appcastId)
-		version = appcast.versions.find(versionId)
+	delete '/appcasts/:appcast_id/versions/:version_id' do
 		destroy(version.path) if version.path
 		appcast.versions.delete(version)
 		true.to_json
 	end
 
-	put '/appcasts/:appcastId/versions/:versionId' do |appcastId, versionId|
+	put '/appcasts/:appcast_id/versions/:version_id' do
 		data = JSON.parse(request.body.read)
-		version = Appcast.find(appcastId).versions.find(versionId)
 		if version.update_attributes(data)
 			Appcast.find(appcastId).versions.find(versionId).to_json
 		else
@@ -390,18 +393,21 @@ class App < Sinatra::Base
 		end
 	end
 
-	get '/appcasts/:id/versions' do |id|
-		Appcast.find(id).versions.to_json
+	get '/appcasts/:appcast_id/versions' do
+		appcast.versions.to_json
 	end
 
-	get '/feed/:id' do |id|
+	get '/feed/:appcast_id' do
 		content_type :xml
-		erb :appcast, :locals => { :appcast => Appcast.find(id) }
+		erb :appcast, :locals => { :appcast => appcast }
 	end
 
-	get '/download/:id' do |id|
+	get '/download/:appcast_id' do
+		version = appcast.versions.where(:draft => false, :pubDate.lt => Time.now()).desc(:pubDate).first
+
+		redirect "/download/#{id}/#{version._id}"
 	end
 
-	get '/download/:id/:versionId' do |id, versionId|
+	get '/download/:appcast_id/:version_id' do
 	end
 end

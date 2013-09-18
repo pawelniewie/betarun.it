@@ -5,8 +5,11 @@
         %span.input-group-addon AppCast Name
         %input.form-control{:type => "text", "ng-model" => "appcast.name", "ng-change" => "saveAppcast()"}
         %span.input-group-addon
-          %a{:href => "/feed/{{appcastId}}"}
+          %a{:href => "/feed/{{appcastId}}", :title => "Updates feed"}
             %i.icon-rss
+        %span.input-group-addon
+          %a{:href => "/download/{{appcastId}}", :title => "Download the latest published version" }
+            %i.icon-download
 
 %form#fileupload{:action => "{{appcastUrl}}", "data-file-upload" => "options", "data-ng-class" => "{'fileupload-processing': processing() || loadingFiles}", :enctype => "multipart/form-data", :method => "POST", "data-accept-file-types" => "/(\.|\/)(zip)$/i", "data-auto-upload" => "true"}
   / The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload
