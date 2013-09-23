@@ -211,6 +211,10 @@ class App < Sinatra::Base
 		haml :index
 	end
 
+	get '/how-to-*' do
+		haml :howto
+	end
+
 	get '/partials/versions' do
 		redirect '/' if not user_id
 		haml :versions, {:layout => false}
@@ -410,6 +414,8 @@ class App < Sinatra::Base
 	end
 
 	get '/download/:appcast_id/:version_id' do
+		halt 404 if not version
+
 		version.downloads += 1
 		version.save
 		redirect version.url
