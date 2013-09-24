@@ -21,39 +21,37 @@
       %slide
         %img{:src => "https://s3.amazonaws.com/appcasts-assets/static/1/how-to/drag-drop-to-frameworks.jpeg"}
         .carousel-caption
-          %h4 Slide
-          %p This is a description
-      %slide
-        %img{:src => "https://s3.amazonaws.com/appcasts-assets/static/1/how-to/copy-frameworks.jpeg"}
-        .carousel-caption
-          %h4 Slide
-          %p This is a description
+          %h4
+            Download
+            %a{:href => "https://s3.amazonaws.com/appcasts-assets/static/1/Sparkle.framework.zip"} Sparkle
+          %p Unzip the file and drag and drop Sparkle framework to your project
       %slide
         %img{:src => "https://s3.amazonaws.com/appcasts-assets/static/1/how-to/set-feed-url.jpeg"}
         .carousel-caption
-          %h4 Slide
-          %p This is a description
+          %h4 Edit Info.plist
+          %p Add Sparkle setting, remember to use your own SUFeedUrl
+      %slide
+        %img{:src => "https://s3.amazonaws.com/appcasts-assets/static/1/how-to/copy-frameworks.jpeg"}
+        .carousel-caption
+          %h4 Add build phase to copy framework files
+          %p Select your target and use Editor -> Add Build Phase -> Add Copy Files Build Phase
       %slide
         %img{:src => "https://s3.amazonaws.com/appcasts-assets/static/1/how-to/set-build-versions.jpeg"}
         .carousel-caption
-          %h4 Slide
-          %p This is a description
+          %h4 Add build phase to run a script
+          %p
+            %a{:href => "https://s3.amazonaws.com/appcasts-assets/static/1/xcode-git-version.sh"} Download a script
+            and place it in your project's root directory
       %slide
         %img{:src => "https://s3.amazonaws.com/appcasts-assets/static/1/how-to/sends-system-profile.jpeg"}
         .carousel-caption
-          %h4 Slide
-          %p This is a description
-  .row.marketing
-    .col-lg-6
-      %h4 Based on proven technology
-      %p This site is using Sparkle the most popular self-updating framework for Mac
-      %h4 Customized
-      %p You'll get a customized Sparkle that requires no effort to integrate it with your project
-    .col-lg-6
-      %h4 Fast
-      %p The whole setup shouldn't take your more than 5 minutes
-      %h4 Fresh
-      %p A special link will return the latest version for your app - right to use on your product page
+          %h4 Enable sending system profile (optional)
+          %p So we'll track what OS X version and hardware your users use
+      %slide
+        %i.icon-check
+        .carousel-caption
+          %h4 You're done!
+          %p From now on your app will self-update
   %hr/
   .footer
     %p &copy; Pawel Niewiadomski 2013
