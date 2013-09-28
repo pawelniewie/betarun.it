@@ -24,6 +24,9 @@ GEM
       chunky_png (~> 1.2)
       fssm (>= 0.2.7)
       sass (~> 3.1)
+    csso-rails (0.3.2)
+      execjs (>= 1)
+    execjs (2.0.2)
     faraday (0.8.8)
       multipart-post (~> 1.2.0)
     fssm (0.2.10)
@@ -96,6 +99,7 @@ DEPENDENCIES
   bson_ext
   closure-compiler
   compass
+  csso-rails
   haml
   koala
   mongo

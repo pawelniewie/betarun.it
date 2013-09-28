@@ -20,6 +20,7 @@ gem "closure-compiler"
 gem "puma"
 gem "rubyzip"
 gem "CFPropertyList"
+gem "csso-rails"
 
 group :development do
 	gem 'sinatra-reloader'
