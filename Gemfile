@@ -22,6 +22,7 @@ gem "rubyzip"
 gem "CFPropertyList"
 gem "csso-rails"
 gem 'rack-google-analytics'
+gem 'mandrill-api', :require => "mandrill"
 
 group :development do
 	gem 'sinatra-reloader'

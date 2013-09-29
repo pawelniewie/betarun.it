@@ -198,6 +198,10 @@ class App < Sinatra::Base
 	  def version
 	  	@version ||= appcast.versions.find(params[:version_id]) || halt(404)
 	  end
+
+	  def mandrill
+	  	@mandrill ||= Mandrill::API.new ENV['MANDRILL_KEY']
+	  end
 	end
 
 	# the facebook session expired! reset ours and restart the process
@@ -259,7 +263,23 @@ class App < Sinatra::Base
 	  	logger.info("User was not found " + profile[:email])
 	  	picture = graph.get_picture("me")
 	  	user = User.create!(email: profile[:email], fullName: profile[:name], callingName: profile[:first_name], picture: picture)
+
+	  	begin
+	  		message = {
+	  			:subject=> "New User for BetaRun.it",
+	  			:text=>"You have a new user #{user.email}",
+	  			:from_name=> "BetaRun.it",
+	  			:from_email=> "root@betarun.it",
+	  			:to=>[
+	  				{:email => "pawelniewiadomski@me.com", :name => "Pawel Niewiadomski"}
+	  			]
+	  		}
+	  		mandrill.messages.send message
+	  	rescue Mandrill::Error => e
+	  		logger.error("A mandrill error occurred: #{e.class} - #{e.message}")
+	  	end
 	  end
+
 	  if not user.facebookToken
 	  	logger.info("Facebook token was not found " + profile[:email])
 	  	new_access_info = authenticator.exchange_access_token_info(access_token).with_indifferent_access
