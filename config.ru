@@ -6,6 +6,12 @@ require './web.rb'
   abort("missing env var: please set #{var}") unless ENV[var]
 end
 
+unless ENV['GOOGLE_ANALYTICS']
+	# Google Analytics: UNCOMMENT IF DESIRED, THEN ADD YOUR OWN ACCOUNT INFO HERE!
+	require 'rack/google-analytics'
+	use Rack::GoogleAnalytics, :tracker => ENV['GOOGLE_ANALYTICS']
+end
+
 use Rack::Session::Cookie, :secret => ENV['COOKIE_SECRET']
 
 map App.assets_prefix do

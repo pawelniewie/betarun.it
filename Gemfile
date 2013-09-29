@@ -21,6 +21,7 @@ gem "puma"
 gem "rubyzip"
 gem "CFPropertyList"
 gem "csso-rails"
+gem 'rack-google-analytics'
 
 group :development do
 	gem 'sinatra-reloader'
