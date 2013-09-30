@@ -1,5 +1,5 @@
 !!!
-%html{:lang => "en", "xmlns:fb" => "http://ogp.me/ns/fb#", "ng-app" => "appcasts"}
+%html{:lang => "en", "xmlns:fb" => "http://ogp.me/ns/fb#", "xmlns:og" => "og: http://ogp.me/ns#", "ng-app" => "appcasts"}
   %head
     %meta{:charset => "utf-8"}/
     %meta{:content => "width=device-width, initial-scale=1.0, maximum-scale=2.0, user-scalable=yes", :name => "viewport"}/
@@ -11,10 +11,11 @@
     / 'https://developers.facebook.com/docs/opengraph/'
     %meta{:content => settings.appname, :property => "og:title"}/
     %meta{:content => "website", :property => "og:type"}/
-    %meta{:content => url, :property => "og:url"}/
-    %meta{:content => url('/logo.png'), :property => "og:image"}/
     %meta{:content => settings.appname, :property => "og:site_name"}/
-    %meta{:content => "Manage your Sparkle AppCasts", :property => "og:description"}/
+    %meta{:content => url, :property => "og:url"}/
+    %meta{:content => "en_US", :property => "og:locale"}/
+    %meta{:content => url("#{image_path("logo.png")}"), :property => "og:image"}/
+    %meta{:content => "Develop self-updating Mac apps in 5 minutes, run beta for your friends.", :property => "og:description"}/
     %meta{:content => settings.appname, :property => "fb:app_id"}/
 
     / Le styles
