@@ -1,5 +1,6 @@
 $stdout.sync = true
 
+require 'split/dashboard'
 require './web.rb'
 
 %w{FACEBOOK_APP_ID FACEBOOK_SECRET COOKIE_SECRET BASE_URL APP_NAME MANDRILL_KEY}.each do |var|
@@ -20,4 +21,16 @@ end
 
 map '/' do
   run App
+end
+
+if ENV['REDISCLOUD_URL']
+	Split.redis = ENV["REDISCLOUD_URL"]
+end
+
+Split::Dashboard.use Rack::Auth::Basic do |username, password|
+  username == 'pawel' && password == 'dupaJasiu'
+end
+
+map '/split' do
+	run Split::Dashboard
 end

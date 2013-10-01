@@ -23,6 +23,7 @@ gem "CFPropertyList"
 gem "csso-rails"
 gem 'rack-google-analytics'
 gem 'mandrill-api', :require => "mandrill"
+gem "split",  github: "andrew/split"
 
 group :development do
 	gem 'sinatra-reloader'

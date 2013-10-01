@@ -66,6 +66,7 @@ class App < Sinatra::Base
 	register Sinatra::Namespace
 
 	helpers Sinatra::ContentFor
+	helpers Split::Helper
 
 	# See https://developers.facebook.com/docs/reference/api/permissions/
 	# for a full list of permissions
