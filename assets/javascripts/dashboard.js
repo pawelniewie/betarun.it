@@ -8,6 +8,7 @@
 //= require plugins/image/plugin.min
 //= require plugins/autolink/plugin.min
 //= require plugins/autoresize/plugin.min
+//= require tinymce
 var kfz = angular.module('appcasts', ['frapontillo.ex.filters', 'timeRelative', '$strap.directives', 'blueimp.fileupload', 'ui.tinymce']).
 factory('Appcasts', ['$http', function($http) {
 	return {
