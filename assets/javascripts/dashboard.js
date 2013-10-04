@@ -3,6 +3,7 @@
 //= require "bootstrap-datetimepicker"
 //= require "angular-datetimepicker"
 //= require tinymce.min
+//= require themes/modern/theme.min
 //= require plugins/link/plugin.min
 //= require plugins/image/plugin.min
 //= require plugins/autolink/plugin.min
