@@ -187,23 +187,6 @@ class App < Sinatra::Base
 	  	return session[:user_id]
 	  end
 
-	  def upload(filename, file)
-	    s3 = AWS::S3.new(
-	      :access_key_id     => ENV['AWS_ACCESS_KEY_ID'],
-	      :secret_access_key => ENV['AWS_SECRET_ACCESS_KEY']
-	    )
-	    obj = s3.buckets[ENV['S3_BUCKET_NAME']].objects[filename].write(file)
-	    return obj.public_url({:secure => true})
-	  end
-
-	  def destroy(filename)
-	    s3 = AWS::S3.new(
-	      :access_key_id     => ENV['AWS_ACCESS_KEY_ID'],
-	      :secret_access_key => ENV['AWS_SECRET_ACCESS_KEY']
-	    )
-	    s3.buckets[ENV['S3_BUCKET_NAME']].objects[filename].delete()
-	  end
-
 	  def appcast
 	  	@appcast ||= Appcast.find(params[:appcast_id]) || halt(404)
 	  end
