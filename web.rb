@@ -431,6 +431,6 @@ class App < Sinatra::Base
 
 		version.downloads += 1
 		version.save
-		redirect version.binary_url
+		redirect version.binary.url
 	end
 end
