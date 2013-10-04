@@ -24,6 +24,9 @@ gem "csso-rails"
 gem 'rack-google-analytics'
 gem 'mandrill-api', :require => "mandrill"
 gem "split",  github: "andrew/split"
+gem "mongoid-paperclip", :require => "mongoid_paperclip"
+gem "delayed_paperclip"
+gem 'hashie'
 
 group :development do
 	gem 'sinatra-reloader'

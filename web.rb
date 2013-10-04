@@ -37,6 +37,7 @@ end
 
 class Version
 		include Mongoid::Document
+		include Mongoid::Paperclip
 
 		embedded_in :appcast
 
@@ -44,13 +45,24 @@ class Version
 		field :description, type: String
 		field :minimumSystemVersion, type: String
 		field :pubDate, type: Time, default: -> { Time.now }
-		field :url, type: String
-		field :path, type: String
 		field :versionNumber, type: Integer
 		field :versionString, type: String
-		field :size, type: Integer
 		field :draft, type: Boolean, default: true
 		field :downloads, type: Integer, default: 0
+
+		has_mongoid_attached_file :binary,
+		    :path           => ':class/:attachment/:hash',
+		    :hash_secret		=> ENV['PAPERCLIP_HASH_SECRET'],
+		    :storage        => :s3,
+		    :s3_credentials => { :access_key_id => ENV['AWS_ACCESS_KEY_ID'], :secret_access_key => ENV['AWS_SECRET_ACCESS_KEY'], :bucket => ENV['S3_BUCKET_NAME']}
+
+		def serializable_hash(options={})
+			json = super
+			json[:binary_url] = self.binary.url
+			return json
+		end
+
+		# process_in_background :binary
 end
 
 class App < Sinatra::Base
@@ -348,29 +360,20 @@ class App < Sinatra::Base
 							error = "CFBundleShortVersionString is not set in Info.plist"
 						elsif not info[:SUFeedURL]
 							error = "SUFeedURL is not set in Info.plist"
-						elsif info[:SUFeedURL].casecmp(ENV['BASE_URL'] + "/feed/" + appcast._id) != 0
+						elsif settings.production? and info[:SUFeedURL].casecmp(ENV['BASE_URL'] + "/feed/" + appcast._id) != 0
 							error = "SUFeedURL points to a wrong address"
 						end
 
 						unless error
 							version = Version.new()
 							begin
-								# first make sure we uploaded the file to S3
-								# if there's an error storing the version it will leak S3 object, don't care now
-								path = appcast._id.to_s + "/" + version._id.to_s + File.extname(file[:filename])
-								url = upload(path, file[:tempfile])
-								size = File.size(file[:tempfile])
-
 								# then update details
 								appcast.versions.push(version)
-								version.title = "Please upgrade to version #{CFBundleShortVersionString}" % info
+								version.title = "Please upgrade to version #{info[:CFBundleShortVersionString]}" % info
 								version.versionNumber = info[:CFBundleVersion]
 								version.versionString = info[:CFBundleShortVersionString]
 								version.minimumSystemVersion = info[:LSMinimumSystemVersion] unless info[:LSMinimumSystemVersion]
-								version.path = path
-								version.url = url
-								version.size = size
-
+								version.binary = file[:tempfile]
 								version.save()
 								versions.push({
 										name: file[:filename],
@@ -378,7 +381,12 @@ class App < Sinatra::Base
 										deleteType: "DELETE",
 										deleteUrl: "/appcasts/" + appcast._id + "/versions/" + version._id
 									})
-							rescue
+							rescue Exception => e
+								logger.error("Error saving version: #{e.class} - #{e.message}")
+								versions.push({
+										name: file[:filename],
+										error: "Error uploading file to AWS S3"
+									})
 								appcast.versions.delete(version)
 							end
 						else
@@ -404,7 +412,7 @@ class App < Sinatra::Base
 	end
 
 	delete '/appcasts/:appcast_id/versions/:version_id' do
-		destroy(version.path) if version.path
+		version.binary.destroy
 		appcast.versions.delete(version)
 		true.to_json
 	end
@@ -440,6 +448,6 @@ class App < Sinatra::Base
 
 		version.downloads += 1
 		version.save
-		redirect version.url
+		redirect version.binary_url
 	end
 end

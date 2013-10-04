@@ -3,7 +3,7 @@ $stdout.sync = true
 require 'split/dashboard'
 require './web.rb'
 
-%w{FACEBOOK_APP_ID FACEBOOK_SECRET COOKIE_SECRET BASE_URL APP_NAME MANDRILL_KEY}.each do |var|
+%w{FACEBOOK_APP_ID FACEBOOK_SECRET COOKIE_SECRET BASE_URL APP_NAME MANDRILL_KEY PAPERCLIP_HASH_SECRET}.each do |var|
   abort("missing env var: please set #{var}") unless ENV[var]
 end
 
