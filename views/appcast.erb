@@ -13,7 +13,7 @@
 				]]></description>
 			<sparkle:minimumSystemVersion><%= version.minimumSystemVersion %></sparkle:minimumSystemVersion>
 			<pubDate><% version.pubDate %></pubDate>
-			<enclosure url="/download/<%= appcast._id %>/<%= version._id %>" sparkle:version="<%= version.versionNumber %>" sparkle:shortVersionString="<%= version.versionString %>" length="<%= version.size %>" type="application/octet-stream"/>
+			<enclosure url="/download/<%= appcast._id %>/<%= version._id %>" sparkle:version="<%= version.versionNumber %>" sparkle:shortVersionString="<%= version.versionString %>" length="<%= version.binary_file_size %>" type="application/octet-stream"/>
 		</item>
 		<% end %>
 	</channel>
