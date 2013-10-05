@@ -2,7 +2,8 @@ require "bundler"
 Bundler.setup(:default)
 Bundler.require
 
-require "./zipreader"
+require "./betarun/zipreader"
+require "./betarun/paperclip"
 
 Mongoid.load!("mongoid.yml")
 
@@ -51,7 +52,7 @@ class Version
 		field :downloads, type: Integer, default: 0
 
 		has_mongoid_attached_file :binary,
-		    :path           => ':class/:attachment/:hash',
+		    :path           => ':class/:attachment/:hash/:filename',
 		    :hash_secret		=> ENV['PAPERCLIP_HASH_SECRET'],
 		    :storage        => :s3,
 		    :s3_credentials => { :access_key_id => ENV['AWS_ACCESS_KEY_ID'], :secret_access_key => ENV['AWS_SECRET_ACCESS_KEY'], :bucket => ENV['S3_BUCKET_NAME']}
@@ -356,7 +357,7 @@ class App < Sinatra::Base
 								version.versionNumber = info[:CFBundleVersion]
 								version.versionString = info[:CFBundleShortVersionString]
 								version.minimumSystemVersion = info[:LSMinimumSystemVersion] unless info[:LSMinimumSystemVersion]
-								version.binary = file[:tempfile]
+								version.binary = file
 								version.save()
 								versions.push({
 										name: file[:filename],
