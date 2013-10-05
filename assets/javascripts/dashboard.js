@@ -125,7 +125,7 @@ var EditVersionCtrl = ['$scope', '$log', '$http', '$routeParams', '$location', '
 	$scope.tinymceConfig = {
 		plugins: ["autolink", "link", "image", "autoresize"],
 		menubar: false,
-		base_url: "/assets"
+		skin_url: "/assets"
 	};
 
 	$http.get(Appcasts.version($scope.appcastId, $routeParams.versionId)).success(function(data) {
