@@ -17,10 +17,10 @@
     %h3.text-muted=settings.appname
   %hr/
   .jumbotron
-    %h1 Develop self updating Mac app in 5 minutes!
-    %p.lead You want to focus on your app, we get it! That's why I prepared this super easy way to handle automatic updates for all your users!
+    %h1=ab_test("header", "Develop self updating Mac app in 5 minutes!", "Build and host self updating Mac app in 5 minutes!", "Easy updates hosting for Sparkle!")
+    %p.lead=ab_test("subheader", "You want to focus on your app, I get it! That's why I prepared this super easy way to handle automatic updates for all your users!", "This site lets your host and publish new versions of your Mac app. Build it and we do the rest!")
     %p
-      %a.btn.btn-lg.btn-success{:href => url('/auth/facebook')} Try it out with Facebook login
+      %a.btn.btn-lg.btn-success{:href => url('/auth/facebook')}=ab_test("login", "Try it out with Facebook login", "Click for a free trial", "Try it out for free")
   .row.marketing
     .col-lg-6
       %h4 Based on proven technology

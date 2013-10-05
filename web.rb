@@ -95,6 +95,10 @@ class App < Sinatra::Base
 	    c.unicode_names = true
 	  end
 
+	  Split.configure do |config|
+	    config.allow_multiple_experiments = true
+	  end
+
 	  %w{javascripts stylesheets images}.each do |type|
       assets.append_path "assets/#{type}"
     end
@@ -258,6 +262,10 @@ class App < Sinatra::Base
 
 	  user = User.where(email: profile[:email]).first
 	  if not user
+	  	finished("header")
+	  	finished("login")
+	  	finished("subheader")
+
 	  	logger.info("User was not found " + profile[:email])
 	  	picture = graph.get_picture("me")
 	  	user = User.create!(email: profile[:email], fullName: profile[:name], callingName: profile[:first_name], picture: picture)
