@@ -2,12 +2,7 @@
 //= require "ng-time-relative"
 //= require "bootstrap-datetimepicker"
 //= require "angular-datetimepicker"
-//= require tinymce.min
-//= require themes/modern/theme.min
-//= require plugins/link/plugin.min
-//= require plugins/image/plugin.min
-//= require plugins/autolink/plugin.min
-//= require plugins/autoresize/plugin.min
+//= require js/tinymce/tinymce.full.min
 //= require tinymce
 var kfz = angular.module('appcasts', ['frapontillo.ex.filters', 'timeRelative', '$strap.directives', 'blueimp.fileupload', 'ui.tinymce']).
 factory('Appcasts', ['$http', function($http) {
@@ -125,7 +120,7 @@ var EditVersionCtrl = ['$scope', '$log', '$http', '$routeParams', '$location', '
 	$scope.tinymceConfig = {
 		plugins: ["autolink", "link", "image", "autoresize"],
 		menubar: false,
-		skin_url: "/assets"
+		skin_url: "/assets/js/tinymce/skins/lightgray"
 	};
 
 	$http.get(Appcasts.version($scope.appcastId, $routeParams.versionId)).success(function(data) {
