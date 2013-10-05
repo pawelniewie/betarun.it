@@ -72,6 +72,7 @@ class App < Sinatra::Base
 	set :precompile,    [ /\w+\.(?!js|css).+/, /application.(css|js)$/ ]
 	set :assets_prefix, "/assets"
 	set :digest_assets, true
+	set :base_url, ENV['BASE_URL']
 	set(:assets_path)   { File.join public_folder, assets_prefix }
 
 	register Sinatra::CompassSupport
