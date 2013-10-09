@@ -26,7 +26,7 @@ gem 'mandrill-api', :require => "mandrill"
 gem "split",  github: "andrew/split"
 gem "mongoid-paperclip", :require => "mongoid_paperclip"
 gem "delayed_paperclip"
-gem 'hashie'
+gem 'newrelic_rpm'
 
 group :development do
 	gem 'sinatra-reloader'
