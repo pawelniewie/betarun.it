@@ -72,6 +72,7 @@ GEM
     moped (1.5.1)
     multi_json (1.7.9)
     multipart-post (1.2.0)
+    newrelic_rpm (3.6.8.164)
     nokogiri (1.5.10)
     origin (1.1.0)
     paperclip (3.5.1)
@@ -140,6 +141,7 @@ DEPENDENCIES
   mongo
   mongoid
   mongoid-paperclip
+  newrelic_rpm
   puma
   rack-google-analytics
   rubyzip

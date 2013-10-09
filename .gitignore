@@ -3,3 +3,4 @@ vendor/install
 *.sublime-*
 .env
 .sass-cache
+dump.rdb
