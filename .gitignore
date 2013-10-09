@@ -4,3 +4,4 @@ vendor/install
 .env
 .sass-cache
 dump.rdb
+log
